@@ -16,8 +16,8 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto place-items-center justify-center w-full">
-            <Link href="/os" className="group relative flex flex-col items-center justify-center w-full max-w-sm h-64 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/50 rounded-3xl p-8 transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)] md:col-start-1 md:col-end-4 lg:col-start-2">
+        <div className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto w-full px-4">
+            <Link href="/os" className="group relative flex flex-col items-center justify-center w-full max-w-sm h-64 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/50 rounded-3xl p-8 transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)] hover:-translate-y-1">
               <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl" />
               
               <div className="relative z-10 flex flex-col items-center">
@@ -38,16 +38,15 @@ export default function Home() {
         </div>
 
         <footer className="mt-20 flex flex-col items-center gap-2 text-sm text-gray-500">
-            <p>&copy; {new Date().getFullYear()} Solução Rental Ltda. Todos os direitos reservados.</p>
+            <p>&copy; {new Date().getFullYear()} Rian Duarte. Todos os direitos reservados.</p>
             <p className="flex items-center gap-1">
-              Desenvolvido por 
               <a 
                 href="https://www.instagram.com/riandte/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-blue-400 hover:text-blue-300 transition-colors font-medium hover:underline"
               >
-                Rian Duarte
+                @riandte
               </a>
             </p>
         </footer>
