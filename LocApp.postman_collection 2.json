@@ -1,0 +1,821 @@
+{
+	"info": {
+		"_postman_id": "120098d7-0153-43d7-8aa7-dfc79444bc79",
+		"name": "LocApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11922017"
+	},
+	"item": [
+		{
+			"name": "Inserir ou atualizar Pessoa",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{CNPJ}}",
+						"description": "CNPJ da empresa",
+						"type": "text"
+					},
+					{
+						"key": "x-api-secret",
+						"value": "{{Secret}}",
+						"description": "Token de acesso para a empresa",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\r\n    \"CpfCnpj\": \"76693892000115\",\r\n    \"Nome\": \"João da Silva Construções e Obras Ltda.\",\r\n    \"NomeFantasia\": \"Joãozinho Joãozinho Joãozinho\",\r\n    \"RG\": null,\r\n    \"Status\": \"A\",\r\n    \"TelefoneComercial\": \"(11) 1111-1111\",\r\n    \"TelefoneResidencial\": \"(22) 2222-2222\",\r\n    \"TelefoneCelular\": \"(11) 98765-4321\",\r\n    \"Fax\": \"(44) 4444-4444\",\r\n    \"Email\": \"joao@joaolocacoes.com.b\",\r\n    \"Enderecos\": [\r\n        {\r\n            \"CpfCnpj\": \"\",\r\n            \"Logradouro\": \"Avenida Brigadeiro Faria Lima\",\r\n            \"Numero\": \"100\",\r\n            \"Complemento\": \"Sala 15\",\r\n            \"Bairro\": \"Pinheiros\",\r\n            \"Cidade\": \"São Paulo\",\r\n            \"UF\": \"SP\",\r\n            \"Descricao\": \"Principal\",\r\n            \"CEP\": \"05426100\",\r\n            \"Ativo\": true,\r\n            \"Principal\": true,\r\n            \"Cobranca\": true\r\n        }\r\n    ],\r\n    \"Contatos\": [\r\n        {\r\n            \"Nome\": \"João\",\r\n            \"Telefone\": \"(41) 1111-2222\",\r\n            \"Email\": \"Joao@curitiba.com\",\r\n            \"Cargo\": \"Presidente\",\r\n            \"Ativo\": true\r\n        }\r\n    ],\r\n    \"DataNascimento\": \"\",\r\n    \"DataCadastro\": \"20/06/2018\",\r\n    \"DataValidadeCadastro\": \"\",\r\n    \"LimiteCredito\": 6000.1200,\r\n    \"DataValidadeLimiteCredito\": \"\",\r\n    \"LocalDeTrabalho\": null,\r\n    \"Cargo\": null,\r\n    \"Cliente\": true,\r\n    \"Fornecedor\": false,\r\n    \"Transportador\": false,\r\n    \"Obra\": false,\r\n    \"Funcionario\": false,\r\n    \"SimplesNacional\": false,\r\n    \"InscricaoMunicipal\": null,\r\n    \"InscricaoEstadual\": null,\r\n    \"IndIEDest\": \"9\",\r\n    \"SubstitutoTributario\": false,\r\n    \"OrgaoPublico\": false,\r\n    \"Socios\": \"João\\r\\nMaria\\r\\nFrancisco\",\r\n    \"Observacoes\": null\r\n},\r\n{\r\n    \"CpfCnpj\": \"99999999999\",\r\n    \"Nome\": \"João da Silva Construções e Obras Ltda.\",\r\n    \"NomeFantasia\": \"Joãozinho Joãozinho Joãozinho\",\r\n    \"RG\": null,\r\n    \"Status\": \"A\",\r\n    \"TelefoneComercial\": \"(11) 1111-2222\",\r\n    \"TelefoneResidencial\": \"(22) 2222-4444\",\r\n    \"TelefoneCelular\": \"(41) 97654-3210\",\r\n    \"Fax\": \"(44) 4444-8888\",\r\n    \"Email\": \"joao@silvaconstrucoes.com.br\",\r\n    \"Enderecos\": [\r\n        {\r\n            \"CpfCnpj\": \"\",\r\n            \"Logradouro\": \"Travessa Major Correia Lima\",\r\n            \"Numero\": \"123\",\r\n            \"Complemento\": \"Compl Princ\",\r\n            \"Bairro\": \"Jardim Botânico\",\r\n            \"Cidade\": \"Curitiba\",\r\n            \"UF\": \"PR\",\r\n            \"Descricao\": \"Principal\",\r\n            \"CEP\": \"80210250\",\r\n            \"Ativo\": true,\r\n            \"Principal\": true,\r\n            \"Cobranca\": false\r\n        },\r\n        {\r\n            \"CpfCnpj\": null,\r\n            \"Logradouro\": \"Estrada Guilherme Weigert\",\r\n            \"Numero\": \"999\",\r\n            \"Complemento\": \"\",\r\n            \"Bairro\": \"Santa Cândida\",\r\n            \"Cidade\": \"Curitiba\",\r\n            \"UF\": \"PR\",\r\n            \"Descricao\": null,\r\n            \"CEP\": \"82720000\",\r\n            \"Ativo\": false,\r\n            \"Principal\": false,\r\n            \"Cobranca\": false\r\n        }\r\n    ],\r\n    \"Contatos\": [\r\n        {\r\n            \"Nome\": \"João\",\r\n            \"Telefone\": \"(41) 1111-2222\",\r\n            \"Email\": \"Joao@curitiba.com\",\r\n            \"Cargo\": \"Presidente\",\r\n            \"Ativo\": true\r\n        },\r\n        {\r\n            \"Nome\": \"Maria\",\r\n            \"Telefone\": \"(11) 9999-8888\",\r\n            \"Email\": \"maria@sp.com\",\r\n            \"Cargo\": \"Gerente\",\r\n            \"Ativo\": true\r\n        },\r\n        {\r\n            \"Nome\": \"José\",\r\n            \"Telefone\": \"(99) 99999-9999\",\r\n            \"Email\": null,\r\n            \"Cargo\": null,\r\n            \"Ativo\": true\r\n        }\r\n     ],\r\n    \"DataNascimento\": \"\",\r\n    \"DataCadastro\": \"20/06/2018\",\r\n    \"DataValidadeCadastro\": \"\",\r\n    \"LimiteCredito\": 6000.1200,\r\n    \"DataValidadeLimiteCredito\": \"\",\r\n    \"LocalDeTrabalho\": null,\r\n    \"Cargo\": null,\r\n    \"Cliente\": true,\r\n    \"Fornecedor\": false,\r\n    \"Transportador\": false,\r\n    \"Obra\": false,\r\n    \"Funcionario\": false,\r\n    \"SimplesNacional\": false,\r\n    \"InscricaoMunicipal\": null,\r\n    \"InscricaoEstadual\": null,\r\n    \"IndIEDest\": \"9\",\r\n    \"SubstitutoTributario\": false,\r\n    \"OrgaoPublico\": false,\r\n    \"Socios\": \"João\\r\\nMaria\\r\\nFrancisco\",\r\n    \"Observacoes\": null\r\n}]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/api/Pessoa/InsertOrUpdate",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"Pessoa",
+						"InsertOrUpdate"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Inserir ou atualizar Pessoa",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{CNPJ}}",
+								"description": "CNPJ da empresa",
+								"type": "text"
+							},
+							{
+								"key": "x-api-secret",
+								"value": "{{Secret}}",
+								"description": "Token de acesso para a empresa",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\r\n    \"CpfCnpj\": \"76693892000115\",\r\n    \"Nome\": \"João da Silva Construções e Obras Ltda.\",\r\n    \"NomeFantasia\": \"Joãozinho Joãozinho Joãozinho\",\r\n    \"RG\": null,\r\n    \"Status\": \"A\",\r\n    \"TelefoneComercial\": \"(11) 1111-1111\",\r\n    \"TelefoneResidencial\": \"(22) 2222-2222\",\r\n    \"TelefoneCelular\": \"(11) 98765-4321\",\r\n    \"Fax\": \"(44) 4444-4444\",\r\n    \"Email\": \"joao@joaolocacoes.com.b\",\r\n    \"Enderecos\": [\r\n        {\r\n            \"CpfCnpj\": \"\",\r\n            \"Logradouro\": \"Avenida Brigadeiro Faria Lima\",\r\n            \"Numero\": \"100\",\r\n            \"Complemento\": \"Sala 15\",\r\n            \"Bairro\": \"Pinheiros\",\r\n            \"Cidade\": \"São Paulo\",\r\n            \"UF\": \"SP\",\r\n            \"Descricao\": \"Principal\",\r\n            \"CEP\": \"05426100\",\r\n            \"Ativo\": true,\r\n            \"Principal\": true,\r\n            \"Cobranca\": true\r\n        }\r\n    ],\r\n    \"Contatos\": [\r\n        {\r\n            \"Nome\": \"João\",\r\n            \"Telefone\": \"(41) 1111-2222\",\r\n            \"Email\": \"Joao@curitiba.com\",\r\n            \"Cargo\": \"Presidente\",\r\n            \"Ativo\": true\r\n        }\r\n    ],\r\n    \"DataNascimento\": \"\",\r\n    \"DataCadastro\": \"20/06/2018\",\r\n    \"DataValidadeCadastro\": \"\",\r\n    \"LimiteCredito\": 6000.1200,\r\n    \"DataValidadeLimiteCredito\": \"\",\r\n    \"LocalDeTrabalho\": null,\r\n    \"Cargo\": null,\r\n    \"Cliente\": true,\r\n    \"Fornecedor\": false,\r\n    \"Transportador\": false,\r\n    \"Obra\": false,\r\n    \"Funcionario\": false,\r\n    \"SimplesNacional\": false,\r\n    \"InscricaoMunicipal\": null,\r\n    \"InscricaoEstadual\": null,\r\n    \"IndIEDest\": \"9\",\r\n    \"SubstitutoTributario\": false,\r\n    \"OrgaoPublico\": false,\r\n    \"Socios\": \"João\\r\\nMaria\\r\\nFrancisco\",\r\n    \"Observacoes\": null\r\n},\r\n{\r\n    \"CpfCnpj\": \"99999999999\",\r\n    \"Nome\": \"João da Silva Construções e Obras Ltda.\",\r\n    \"NomeFantasia\": \"Joãozinho Joãozinho Joãozinho\",\r\n    \"RG\": null,\r\n    \"Status\": \"A\",\r\n    \"TelefoneComercial\": \"(11) 1111-2222\",\r\n    \"TelefoneResidencial\": \"(22) 2222-4444\",\r\n    \"TelefoneCelular\": \"(41) 97654-3210\",\r\n    \"Fax\": \"(44) 4444-8888\",\r\n    \"Email\": \"joao@silvaconstrucoes.com.br\",\r\n    \"Enderecos\": [\r\n        {\r\n            \"CpfCnpj\": \"\",\r\n            \"Logradouro\": \"Travessa Major Correia Lima\",\r\n            \"Numero\": \"123\",\r\n            \"Complemento\": \"Compl Princ\",\r\n            \"Bairro\": \"Jardim Botânico\",\r\n            \"Cidade\": \"Curitiba\",\r\n            \"UF\": \"PR\",\r\n            \"Descricao\": \"Principal\",\r\n            \"CEP\": \"80210250\",\r\n            \"Ativo\": true,\r\n            \"Principal\": true,\r\n            \"Cobranca\": false\r\n        },\r\n        {\r\n            \"CpfCnpj\": null,\r\n            \"Logradouro\": \"Estrada Guilherme Weigert\",\r\n            \"Numero\": \"999\",\r\n            \"Complemento\": \"\",\r\n            \"Bairro\": \"Santa Cândida\",\r\n            \"Cidade\": \"Curitiba\",\r\n            \"UF\": \"PR\",\r\n            \"Descricao\": null,\r\n            \"CEP\": \"82720000\",\r\n            \"Ativo\": false,\r\n            \"Principal\": false,\r\n            \"Cobranca\": false\r\n        }\r\n    ],\r\n    \"Contatos\": [\r\n        {\r\n            \"Nome\": \"João\",\r\n            \"Telefone\": \"(41) 1111-2222\",\r\n            \"Email\": \"Joao@curitiba.com\",\r\n            \"Cargo\": \"Presidente\",\r\n            \"Ativo\": true\r\n        },\r\n        {\r\n            \"Nome\": \"Maria\",\r\n            \"Telefone\": \"(11) 9999-8888\",\r\n            \"Email\": \"maria@sp.com\",\r\n            \"Cargo\": \"Gerente\",\r\n            \"Ativo\": true\r\n        },\r\n        {\r\n            \"Nome\": \"José\",\r\n            \"Telefone\": \"(99) 99999-9999\",\r\n            \"Email\": null,\r\n            \"Cargo\": null,\r\n            \"Ativo\": true\r\n        }\r\n     ],\r\n    \"DataNascimento\": \"\",\r\n    \"DataCadastro\": \"20/06/2018\",\r\n    \"DataValidadeCadastro\": \"\",\r\n    \"LimiteCredito\": 6000.1200,\r\n    \"DataValidadeLimiteCredito\": \"\",\r\n    \"LocalDeTrabalho\": null,\r\n    \"Cargo\": null,\r\n    \"Cliente\": true,\r\n    \"Fornecedor\": false,\r\n    \"Transportador\": false,\r\n    \"Obra\": false,\r\n    \"Funcionario\": false,\r\n    \"SimplesNacional\": false,\r\n    \"InscricaoMunicipal\": null,\r\n    \"InscricaoEstadual\": null,\r\n    \"IndIEDest\": \"9\",\r\n    \"SubstitutoTributario\": false,\r\n    \"OrgaoPublico\": false,\r\n    \"Socios\": \"João\\r\\nMaria\\r\\nFrancisco\",\r\n    \"Observacoes\": null\r\n}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/Pessoa/InsertOrUpdate",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Pessoa",
+								"InsertOrUpdate"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "private"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "Server",
+							"value": "Vida longa e prospera"
+						},
+						{
+							"key": "X-AspNet-Version",
+							"value": "4.0.30319"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": ".ASPXAUTH=; expires=Tue, 12-Oct-1999 03:00:00 GMT; path=/; HttpOnly; SameSite=Lax"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "frame-ancestors 'self'"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "deny"
+						},
+						{
+							"key": "Referrer-policy",
+							"value": "strict-origin"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=2592000; includeSubDomains"
+						},
+						{
+							"key": "Permissions-Policy",
+							"value": "payment=()"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "none"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 18:31:26 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "35"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date"
+						}
+					],
+					"body": "{\n    \"Sucesso\": true,\n    \"Numeros\": [\n        7,\n        5065\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Consultar Pessoa",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{CNPJ}}",
+						"description": "CNPJ da empresa",
+						"type": "text"
+					},
+					{
+						"key": "x-api-secret",
+						"value": "{{Secret}}",
+						"description": "Token de acesso para a empresa",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/Pessoa/Get?cpfcnpj=76693892000115",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"Pessoa",
+						"Get"
+					],
+					"query": [
+						{
+							"key": "cpfcnpj",
+							"value": "76693892000115",
+							"description": "CNPJ da pessoa (cliente/fornecedor)"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Consultar Pessoa",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{CNPJ}}",
+								"description": "CNPJ da empresa",
+								"type": "text"
+							},
+							{
+								"key": "x-api-secret",
+								"value": "{{Secret}}",
+								"description": "Token de acesso para a empresa",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/Pessoa/Get?cpfcnpj=76693892000115",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Pessoa",
+								"Get"
+							],
+							"query": [
+								{
+									"key": "cpfcnpj",
+									"value": "76693892000115",
+									"description": "CNPJ da pessoa (cliente/fornecedor)"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "private"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Server",
+							"value": "Vida longa e prospera"
+						},
+						{
+							"key": "X-AspNet-Version",
+							"value": "4.0.30319"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": ".ASPXAUTH=; expires=Tue, 12-Oct-1999 03:00:00 GMT; path=/; HttpOnly; SameSite=Lax"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "frame-ancestors 'self'"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "deny"
+						},
+						{
+							"key": "Referrer-policy",
+							"value": "strict-origin"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=15768000"
+						},
+						{
+							"key": "Permissions-Policy",
+							"value": "payment=()"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "none"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 18:42:04 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1225"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Sucesso\": true,\n    \"Pessoa\": {\n        \"Id\": \"ECD034702308552AD7DF18\",\n        \"Numero\": 7,\n        \"CpfCnpj\": \"76693892000115\",\n        \"Nome\": \"João da Silva Construções e Obras Ltda.\",\n        \"NomeFantasia\": \"Joãozinho Joãozinho Joãozinho\",\n        \"RG\": null,\n        \"Status\": \"Ativo\",\n        \"TelefoneComercial\": \"(11) 1111-1111\",\n        \"TelefoneResidencial\": null,\n        \"TelefoneCelular\": \"(11) 98765-4321\",\n        \"Fax\": \"(44) 4444-4444\",\n        \"Email\": \"joao@joaolocacoes.com.b\",\n        \"Enderecos\": [\n            {\n                \"CpfCnpj\": \"\",\n                \"Logradouro\": \"Avenida Brigadeiro Faria Lima\",\n                \"Numero\": \"100\",\n                \"Complemento\": \"Sala 15\",\n                \"Bairro\": \"Pinheiros\",\n                \"Cidade\": \"São Paulo\",\n                \"UF\": \"SP\",\n                \"Descricao\": \"Principal\",\n                \"CEP\": \"05426100\",\n                \"Ativo\": true,\n                \"Principal\": true,\n                \"Cobranca\": true\n            }\n        ],\n        \"Contatos\": [\n            {\n                \"Nome\": \"João\",\n                \"Telefone\": \"(41) 1111-2222\",\n                \"Email\": \"Joao@curitiba.com\",\n                \"Cargo\": \"Presidente\",\n                \"Ativo\": true\n            }\n        ],\n        \"DataNascimento\": null,\n        \"DataCadastro\": \"20/06/2018\",\n        \"DataValidadeCadastro\": null,\n        \"LimiteCredito\": 600012,\n        \"DataValidadeLimiteCredito\": \"24/07/2024\",\n        \"LocalDeTrabalho\": null,\n        \"Cargo\": null,\n        \"Cliente\": true,\n        \"Fornecedor\": false,\n        \"Transportador\": false,\n        \"Obra\": false,\n        \"Funcionario\": false,\n        \"SimplesNacional\": false,\n        \"InscricaoMunicipal\": null,\n        \"InscricaoEstadual\": null,\n        \"IndIEDest\": \"9\",\n        \"SubstitutoTributario\": false,\n        \"OrgaoPublico\": false,\n        \"Socios\": \"João\\r\\nMaria\\r\\nFrancisco\",\n        \"Observacoes\": null\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Consultar Títulos",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{CNPJ}}",
+						"description": "CNPJ da empresa",
+						"type": "text"
+					},
+					{
+						"key": "x-api-secret",
+						"value": "{{Secret}}",
+						"description": "Token de acesso para a empresa",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/Titulo/Get?DataInicial=01/03/2023&DataFinal=31/03/2023",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"Titulo",
+						"Get"
+					],
+					"query": [
+						{
+							"key": "DataInicial",
+							"value": "01/03/2023"
+						},
+						{
+							"key": "DataFinal",
+							"value": "31/03/2023"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Consultar Títulos",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{CNPJ}}",
+								"description": "CNPJ da empresa",
+								"type": "text"
+							},
+							{
+								"key": "x-api-secret",
+								"value": "{{Secret}}",
+								"description": "Token de acesso para a empresa",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/Titulo/Get?DataInicial=01/03/2023&DataFinal=31/03/2023",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Titulo",
+								"Get"
+							],
+							"query": [
+								{
+									"key": "DataInicial",
+									"value": "01/03/2023"
+								},
+								{
+									"key": "DataFinal",
+									"value": "31/03/2023"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "private"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Server",
+							"value": "Vida longa e prospera"
+						},
+						{
+							"key": "X-AspNet-Version",
+							"value": "4.0.30319"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": ".ASPXAUTH=; expires=Tue, 12-Oct-1999 03:00:00 GMT; path=/; HttpOnly; SameSite=Lax"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "frame-ancestors 'self'"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "deny"
+						},
+						{
+							"key": "Referrer-policy",
+							"value": "strict-origin"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=15768000"
+						},
+						{
+							"key": "Permissions-Policy",
+							"value": "payment=()"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "none"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 18:40:10 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1102"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Sucesso\": true,\n    \"Titulos\": [\n        {\n            \"Id\": \"05280F6412774D4AE346F\",\n            \"Numero\": 94,\n            \"CpfCnpj\": \"12398765482\",\n            \"Tipo\": \"Receber\",\n            \"DataEmissao\": \"29/03/2023 08:52:43\",\n            \"DataVencimento\": \"29/03/2023\",\n            \"DataBaixa\": \"29/03/2023\",\n            \"Historico\": \"Teste de parcelamento\",\n            \"Status\": \"Quitado\",\n            \"TipoDocumento\": \"NFSe\",\n            \"NumDocOrigem\": \"951\",\n            \"Parcela\": 1,\n            \"FormaPagamento\": null,\n            \"Valor\": 1000,\n            \"ValorLiquido\": 1000,\n            \"Saldo\": 0\n        },\n        {\n            \"Id\": \"36E3E7E812775A29A4C17\",\n            \"Numero\": 95,\n            \"CpfCnpj\": \"12398765482\",\n            \"Tipo\": \"Receber\",\n            \"DataEmissao\": \"29/03/2023 08:52:43\",\n            \"DataVencimento\": \"29/04/2023\",\n            \"DataBaixa\": null,\n            \"Historico\": \"Teste de parcelamento\",\n            \"Status\": \"Aberto\",\n            \"TipoDocumento\": \"NFSe\",\n            \"NumDocOrigem\": \"951\",\n            \"Parcela\": 2,\n            \"FormaPagamento\": null,\n            \"Valor\": 1000,\n            \"ValorLiquido\": 1000,\n            \"Saldo\": 1000\n        },\n        {\n            \"Id\": \"26F4795A1277600D1BE91\",\n            \"Numero\": 96,\n            \"CpfCnpj\": \"12398765482\",\n            \"Tipo\": \"Receber\",\n            \"DataEmissao\": \"29/03/2023 08:52:43\",\n            \"DataVencimento\": \"29/05/2023\",\n            \"DataBaixa\": \"03/06/2024\",\n            \"Historico\": \"Teste de parcelamento\",\n            \"Status\": \"Quitado\",\n            \"TipoDocumento\": \"NFSe\",\n            \"NumDocOrigem\": \"951\",\n            \"Parcela\": 3,\n            \"FormaPagamento\": null,\n            \"Valor\": 1000,\n            \"ValorLiquido\": 1000,\n            \"Saldo\": 0\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Consultar Título por Id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{CNPJ}}",
+						"description": "CNPJ da empresa",
+						"type": "text"
+					},
+					{
+						"key": "x-api-secret",
+						"value": "{{Secret}}",
+						"description": "Token de acesso para a empresa",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/Titulo/Get/05280F6412774D4AE346F",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"Titulo",
+						"Get",
+						"05280F6412774D4AE346F"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Consultar Título por Id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{CNPJ}}",
+								"description": "CNPJ da empresa",
+								"type": "text"
+							},
+							{
+								"key": "x-api-secret",
+								"value": "{{Secret}}",
+								"description": "Token de acesso para a empresa",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/Titulo/Get/05280F6412774D4AE346F",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Titulo",
+								"Get",
+								"05280F6412774D4AE346F"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "private"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Server",
+							"value": "Vida longa e prospera"
+						},
+						{
+							"key": "X-AspNet-Version",
+							"value": "4.0.30319"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": ".ASPXAUTH=; expires=Tue, 12-Oct-1999 03:00:00 GMT; path=/; HttpOnly; SameSite=Lax"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "frame-ancestors 'self'"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "deny"
+						},
+						{
+							"key": "Referrer-policy",
+							"value": "strict-origin"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=15768000"
+						},
+						{
+							"key": "Permissions-Policy",
+							"value": "payment=()"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "none"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 18:46:34 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "386"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Sucesso\": true,\n    \"Titulos\": {\n        \"Id\": \"05280F6412774D4AE346F\",\n        \"Numero\": 94,\n        \"CpfCnpj\": \"12398765482\",\n        \"Tipo\": \"Receber\",\n        \"DataEmissao\": \"29/03/2023 08:52:43\",\n        \"DataVencimento\": \"29/03/2023\",\n        \"DataBaixa\": \"29/03/2023\",\n        \"Historico\": \"Teste de parcelamento\",\n        \"Status\": \"Quitado\",\n        \"TipoDocumento\": \"NFSe\",\n        \"NumDocOrigem\": \"951\",\n        \"Parcela\": 1,\n        \"FormaPagamento\": null,\n        \"Valor\": 1000,\n        \"ValorLiquido\": 1000,\n        \"Saldo\": 0\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "GetContrato",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{CNPJ}}",
+						"description": "CNPJ da empresa",
+						"type": "text"
+					},
+					{
+						"key": "x-api-secret",
+						"value": "{{Secret}}",
+						"description": "Token de acesso para a empresa",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/Contrato/?Numero=1&DataEmissaoInicial=01/02/2024&DataEmissaoFinal=28/02/2025",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"Contrato",
+						""
+					],
+					"query": [
+						{
+							"key": "Numero",
+							"value": "1",
+							"description": "Opcional. Número do contrato a consultar. Se for informado, o sistema desconsidera os parâmetros DataEmissaoInicial e DataEmissaoFinal."
+						},
+						{
+							"key": "DataEmissaoInicial",
+							"value": "01/02/2024",
+							"description": "Obrigatório quando o Numero nao for informado. Junto com a DataEmissaoFinal indica o período de pesquisa considerando a data de emissão do contrato."
+						},
+						{
+							"key": "DataEmissaoFinal",
+							"value": "28/02/2025",
+							"description": "Obrigatório quando o Numero nao for informado. Junto com a DataEmissaoInicial indica o período de pesquisa considerando a data de emissão do contrato."
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "GetContrato",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{CNPJ}}",
+								"description": "CNPJ da empresa",
+								"type": "text"
+							},
+							{
+								"key": "x-api-secret",
+								"value": "{{Secret}}",
+								"description": "Token de acesso para a empresa",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/Contrato/?Numero=1&DataEmissaoInicial=01/02/2024&DataEmissaoFinal=28/02/2025",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"Contrato",
+								""
+							],
+							"query": [
+								{
+									"key": "Numero",
+									"value": "1",
+									"description": "Opcional. Número do contrato a consultar. Se for informado, o sistema desconsidera os parâmetros DataEmissaoInicial e DataEmissaoFinal."
+								},
+								{
+									"key": "DataEmissaoInicial",
+									"value": "01/02/2024",
+									"description": "Obrigatório quando o Numero nao for informado. Junto com a DataEmissaoFinal indica o período de pesquisa considerando a data de emissão do contrato."
+								},
+								{
+									"key": "DataEmissaoFinal",
+									"value": "28/02/2025",
+									"description": "Obrigatório quando o Numero nao for informado. Junto com a DataEmissaoInicial indica o período de pesquisa considerando a data de emissão do contrato."
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Cache-Control",
+							"value": "private"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Server",
+							"value": "Vida longa e prospera"
+						},
+						{
+							"key": "X-AspNet-Version",
+							"value": "4.0.30319"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": ".ASPXAUTH=; expires=Tue, 12-Oct-1999 03:00:00 GMT; path=/; HttpOnly; SameSite=Lax"
+						},
+						{
+							"key": "Content-Security-Policy",
+							"value": "frame-ancestors 'self'"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "1; mode=block"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "deny"
+						},
+						{
+							"key": "Referrer-policy",
+							"value": "strict-origin"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=15768000"
+						},
+						{
+							"key": "Permissions-Policy",
+							"value": "payment=()"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "none"
+						},
+						{
+							"key": "X-Permitted-Cross-Domain-Policies",
+							"value": "none"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 01 Aug 2025 18:39:18 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1520"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"Sucesso\": true,\n    \"Contrato\": {\n        \"Id\": \"38951C7A125938A4B15\",\n        \"Numero\": 1,\n        \"CpfCnpj\": \"12369854000129\",\n        \"Nome\": \"Cliente Pessoa Jurídica Demonstração\",\n        \"DataEmissao\": \"08/03/2017 00:00:00\",\n        \"DataInicio\": \"08/03/2017\",\n        \"DataPrimeiroVencimento\": \"15/03/2017\",\n        \"Status\": \"Ativo\",\n        \"EnderecoEntrega\": \"Principal - Av. Rui Barbosa, 1300  - Sala 03 - Centro - Palmas/TO - 77060-008\",\n        \"NomeContato\": \"\",\n        \"FormaPagamento\": \"\",\n        \"ValorProdutos\": 415,\n        \"ValorDesconto\": 0,\n        \"ValorFrete\": 0,\n        \"ValorTotal\": 415,\n        \"Aditivos\": [\n            {\n                \"Numero\": 0,\n                \"ValorTotal\": 210,\n                \"Produtos\": [\n                    {\n                        \"Descricao\": \"Betoneira\\\"\",\n                        \"Qtde\": 1,\n                        \"QtdeEnviada\": 1,\n                        \"QtdeDevolvida\": 1,\n                        \"Valor\": 90,\n                        \"ValorTotal\": 90\n                    },\n                    {\n                        \"Descricao\": \"Martelete\",\n                        \"Qtde\": 1,\n                        \"QtdeEnviada\": 1,\n                        \"QtdeDevolvida\": 0,\n                        \"Valor\": 120,\n                        \"ValorTotal\": 120\n                    }\n                ]\n            },\n            {\n                \"Numero\": 1,\n                \"ValorTotal\": 205,\n                \"Produtos\": [\n                    {\n                        \"Descricao\": \"Martelete\",\n                        \"Qtde\": 1,\n                        \"QtdeEnviada\": 1,\n                        \"QtdeDevolvida\": 0,\n                        \"Valor\": 115,\n                        \"ValorTotal\": 115\n                    },\n                    {\n                        \"Descricao\": \"Betoneira\\\"\",\n                        \"Qtde\": 1,\n                        \"QtdeEnviada\": 1,\n                        \"QtdeDevolvida\": 0,\n                        \"Valor\": 90,\n                        \"ValorTotal\": 90\n                    }\n                ]\n            }\n        ],\n        \"Eventos\": [\n            {\n                \"Data\": \"08/03/2017\",\n                \"DataEstorno\": \"\",\n                \"Descricao\": \"\",\n                \"Produtos\": [\n                    {\n                        \"Descricao\": \"Betoneira\\\"\",\n                        \"CodPatrimonio\": \"BET001\"\n                    },\n                    {\n                        \"Descricao\": \"Martelete\",\n                        \"CodPatrimonio\": \"MAR001\"\n                    }\n                ]\n            },\n            {\n                \"Data\": \"12/04/2018\",\n                \"DataEstorno\": \"\",\n                \"Descricao\": \"\",\n                \"Produtos\": [\n                    {\n                        \"Descricao\": \"Betoneira\\\"\",\n                        \"CodPatrimonio\": \"BET001\"\n                    }\n                ]\n            },\n            {\n                \"Data\": \"01/07/2019\",\n                \"DataEstorno\": \"\",\n                \"Descricao\": \"\",\n                \"Produtos\": [\n                    {\n                        \"Descricao\": \"Martelete\",\n                        \"CodPatrimonio\": \"MAR003\"\n                    },\n                    {\n                        \"Descricao\": \"Betoneira\\\"\",\n                        \"CodPatrimonio\": \"BET006\"\n                    }\n                ]\n            }\n        ]\n    }\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://homolog.locapp.com.br",
+			"type": "default"
+		},
+		{
+			"key": "CNPJ",
+			"value": "{{CNPJ}}",
+			"type": "string"
+		},
+		{
+			"key": "Secret",
+			"value": "{{Secret}}",
+			"type": "string"
+		}
+	]
+}
