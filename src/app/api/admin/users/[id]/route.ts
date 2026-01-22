@@ -1,65 +1,95 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { UserService } from '@/lib/services/userService';
+import { FuncionarioService } from '@/lib/services/funcionarioService';
 import { AuthContext } from '@/lib/auth/authContext';
-import { MockFuncionarioStore } from '@/lib/org/funcionarios';
-import { randomUUID } from 'crypto';
+import { jwtVerify } from 'jose';
+import { cookies } from 'next/headers';
 
-async function getContext(req: NextRequest): Promise<AuthContext> {
-    const { cookies } = await import('next/headers');
+async function getContext(): Promise<AuthContext> {
     const cookieStore = await cookies();
-    const token = cookieStore.get('auth_token');
-    if (!token) throw new Error('Não autenticado');
-    try {
-        const payload = JSON.parse(Buffer.from(token.value.split('.')[1], 'base64').toString());
-        return { user: { id: payload.userId, name: payload.name, email: payload.email, roles: payload.roles } };
-    } catch (e) { throw new Error('Token inválido'); }
+    const token = cookieStore.get('auth_token')?.value;
+    let user = { id: 'anon', name: 'Anon', email: '', roles: [] as string[] };
+    
+    if (token) {
+        try {
+            const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY || 'default-secret-key-change-me-in-prod');
+            const { payload } = await jwtVerify(token, secret);
+            user = { 
+                id: (payload.sub as string) || (payload.id as string) || 'anon',
+                name: (payload.name as string) || '',
+                email: (payload.email as string) || '',
+                roles: (payload.roles as string[]) || []
+            };
+        } catch {}
+    }
+    return { user };
 }
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const context = await getContext(req);
+    const context = await getContext();
+    if (!context.user.roles.includes('ADMIN')) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     const data = await req.json();
     const user = await UserService.atualizar(id, data, context);
     
     // Update/Create Funcionario if cargo/setor provided
     if (data.cargoId && data.setorId) {
-        const func = await MockFuncionarioStore.getByUserId(id);
-        if (func) {
-            func.cargoId = data.cargoId;
-            func.setorId = data.setorId;
-            func.nome = user.name; // Keep name synced
-            func.emailCorporativo = user.email; // Keep email synced
-            await MockFuncionarioStore.save(func);
-        } else {
-             await MockFuncionarioStore.save({
-                id: randomUUID(),
-                nome: user.name,
-                emailCorporativo: user.email,
-                cargoId: data.cargoId,
-                setorId: data.setorId,
-                usuarioId: user.id,
-                ativo: true,
-                createdAt: new Date().toISOString()
-            });
+        try {
+            const func = await FuncionarioService.buscarPorUsuarioId(id);
+            
+            if (func) {
+                await FuncionarioService.atualizar(func.id, {
+                    cargoId: data.cargoId,
+                    setorId: data.setorId,
+                    nome: user.name, // Keep name synced
+                    emailCorporativo: user.email // Keep email synced
+                }, context);
+            } else {
+                 await FuncionarioService.criar({
+                    nome: user.name,
+                    emailCorporativo: user.email,
+                    cargoId: data.cargoId,
+                    setorId: data.setorId,
+                    usuarioId: user.id,
+                    ativo: true
+                }, context);
+            }
+        } catch (e) {
+            console.error('Erro ao sincronizar funcionário:', e);
         }
     }
 
     return NextResponse.json(user);
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 403 });
+    return NextResponse.json({ error: err.message }, { status: 400 });
   }
 }
 
-// DELETE não estava no UserService, mas precisamos para o Admin
-// Vou adicionar exclusão lógica (active: false) ou implementar delete no UserService
-// O prompt diz "Admin desativar o último ADMIN" -> implies deactivate vs delete.
-// "Admin remover a si mesmo" -> remove implies delete?
-// Vou usar inativação via PUT active: false para "remover" visualmente ou implementar DELETE real.
-// O prompt pede "Cadastro / Edição ... Status (ativo/inativo)".
-// Vou suportar DELETE apenas se implementarmos no Service.
-// Por enquanto, vou responder 405 Method Not Allowed ou implementar DELETE como inativação?
-// Melhor não confundir. DELETE deve deletar. Se não tem delete no service, não exponho.
-// Mas o prompt diz "Admin remover a si mesmo".
-// Vou assumir que remover = inativar ou deletar.
-// Vou adicionar `excluir` no `userService` agora.
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    try {
+        const { id } = await params;
+        const context = await getContext();
+        if (!context.user.roles.includes('ADMIN')) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+
+        // Soft delete user via service (need to add this method to UserService if not exists, 
+        // or just update active=false here if UserService allows generic update)
+        // UserService.atualizar allows updating active status.
+        await UserService.atualizar(id, { active: false }, context);
+        
+        // Also deactivate employee if exists
+        const func = await FuncionarioService.buscarPorUsuarioId(id);
+        if (func) {
+            await FuncionarioService.atualizar(func.id, { ativo: false }, context);
+        }
+
+        return NextResponse.json({ success: true });
+    } catch (err: any) {
+        return NextResponse.json({ error: err.message }, { status: 400 });
+    }
+}

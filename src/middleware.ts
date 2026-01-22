@@ -43,10 +43,23 @@ export async function middleware(request: NextRequest) {
       process.env.JWT_SECRET_KEY || 'default-secret-key-change-me-in-prod'
     )
     
-    await jwtVerify(token, secret)
+    const { payload } = await jwtVerify(token, secret)
     
-    // Token is valid, allow request
-    return NextResponse.next()
+    // Token is valid, inject context into headers
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-user-id', (payload.sub as string) || (payload.id as string) || '');
+    requestHeaders.set('x-user-email', payload.email as string || '');
+    requestHeaders.set('x-user-roles', JSON.stringify(payload.roles || []));
+    if (payload.funcionario) {
+        requestHeaders.set('x-user-funcionario', JSON.stringify(payload.funcionario));
+    }
+    
+    // Allow request with new headers
+    return NextResponse.next({
+        request: {
+            headers: requestHeaders,
+        },
+    })
   } catch (err) {
     // Token invalid or expired
     const loginUrl = new URL('/login', request.url)

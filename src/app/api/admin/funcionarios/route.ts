@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MockFuncionarioStore } from '@/lib/org/funcionarios';
+import { FuncionarioService } from '@/lib/services/funcionarioService';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 
@@ -27,7 +27,7 @@ export async function GET() {
     if (!context.user.roles.includes('ADMIN')) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    const data = await MockFuncionarioStore.getAll();
+    const data = await FuncionarioService.listar(context);
     return NextResponse.json(data);
 }
 
@@ -39,21 +39,7 @@ export async function POST(req: NextRequest) {
     
     try {
         const body = await req.json();
-        
-        // Validate if user already has an employee record
-        if (body.usuarioId) {
-            const existing = await MockFuncionarioStore.getByUserId(body.usuarioId);
-            if (existing) {
-                return NextResponse.json({ error: 'Este usuário já possui um funcionário vinculado.' }, { status: 400 });
-            }
-        }
-
-        const newItem = await MockFuncionarioStore.save({
-            ...body,
-            id: body.id || `func-${Date.now()}`,
-            createdAt: new Date().toISOString(),
-            ativo: body.ativo ?? true
-        });
+        const newItem = await FuncionarioService.criar(body, context);
         return NextResponse.json(newItem);
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 400 });

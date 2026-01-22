@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MockCargoStore } from '@/lib/org/cargos';
+import { CargoService } from '@/lib/services/cargoService';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 
@@ -27,7 +27,7 @@ export async function GET() {
     if (!context.user.roles.includes('ADMIN')) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    const data = await MockCargoStore.getAll();
+    const data = await CargoService.listar();
     return NextResponse.json(data);
 }
 
@@ -39,12 +39,7 @@ export async function POST(req: NextRequest) {
     
     try {
         const body = await req.json();
-        const newItem = await MockCargoStore.save({
-            ...body,
-            id: body.id || `cargo-${Date.now()}`,
-            createdAt: new Date().toISOString(),
-            ativo: body.ativo ?? true
-        });
+        const newItem = await CargoService.criar(body, context);
         return NextResponse.json(newItem);
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 400 });

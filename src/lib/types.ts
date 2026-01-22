@@ -197,10 +197,23 @@ export interface OrdemServicoInput {
     nome: string;
     documento: string;
   };
+  contrato?: string; // Para lógica de numeração personalizada
   endereco: string;
   contato: string;
   prioridade: PrioridadePendencia;
   dataPrevista: string;
   descricao: string;
   observacoes?: string;
+}
+
+export interface ServiceOrder {
+  id: string;
+  number: number;
+  clientData: any; // Pode tipar melhor se quiser
+  status: 'ABERTA' | 'EM_ANDAMENTO' | 'CONCLUIDA' | 'CANCELADA';
+  priority: PrioridadePendencia;
+  description: string;
+  scheduledDate: string; // ISO Date
+  createdAt: string;
+  updatedAt: string;
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth/session';
-import { MockUserStore } from '@/lib/auth/mockUsers';
+import { UserService } from '@/lib/services/userService';
 
 export async function GET(req: Request) {
   const session = await getSession(req);
@@ -11,13 +11,7 @@ export async function GET(req: Request) {
   try {
     // Retorna lista simplificada para comboboxes/selects
     // Qualquer usuário autenticado pode ver a lista de usuários para atribuir tarefas
-    const users = await MockUserStore.getAll();
-    const simpleUsers = users.map(u => ({
-      id: u.id,
-      name: u.name,
-      email: u.email, // Útil para distinguir homônimos se houver
-      roles: u.roles
-    }));
+    const simpleUsers = await UserService.listarSimples(session);
     
     return NextResponse.json(simpleUsers);
   } catch (error: any) {

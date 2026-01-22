@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MockCargoStore } from '@/lib/org/cargos';
+import { CargoService } from '@/lib/services/cargoService';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 
@@ -32,10 +32,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     
     try {
         const body = await req.json();
-        const existing = await MockCargoStore.getById(id);
+        const existing = await CargoService.buscarPorId(id);
         if (!existing) return NextResponse.json({ error: 'Not Found' }, { status: 404 });
         
-        const updated = await MockCargoStore.save({ ...existing, ...body, updatedAt: new Date().toISOString() });
+        const updated = await CargoService.atualizar(id, body, context);
         return NextResponse.json(updated);
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 400 });
@@ -51,7 +51,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     const { id } = await params;
     
     try {
-        await MockCargoStore.delete(id);
+        await CargoService.excluir(id, context);
         return NextResponse.json({ success: true });
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 400 });

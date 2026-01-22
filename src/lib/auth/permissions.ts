@@ -1,6 +1,6 @@
 import { Permission } from '@/lib/types';
 import { AuthContext } from '@/lib/auth/authContext';
-import { MockRoleStore } from '@/lib/auth/mockRoles';
+import { prisma } from '@/lib/db';
 
 export class ForbiddenError extends Error {
   constructor(message: string = 'Acesso negado') {
@@ -10,14 +10,21 @@ export class ForbiddenError extends Error {
 }
 
 export async function hasPermission(context: AuthContext, requiredPermission: Permission): Promise<boolean> {
-  if (!context || !context.user || !context.user.roles) return false;
+  if (!context || !context.user || !context.user.roles || context.user.roles.length === 0) return false;
   
-  const roles = await MockRoleStore.getAll();
-  const roleMap = new Map(roles.map(r => [r.name, r.permissions]));
+  // Otimização: Buscar apenas as permissões das roles do usuário
+  const permissions = await prisma.rolePermission.findMany({
+    where: {
+      roleId: {
+        in: context.user.roles
+      }
+    },
+    select: {
+      permissionId: true
+    }
+  });
   
-  const userPermissions = new Set(
-    context.user.roles.flatMap(roleName => roleMap.get(roleName) || [])
-  );
+  const userPermissions = new Set(permissions.map(p => p.permissionId));
   
   return userPermissions.has(requiredPermission);
 }

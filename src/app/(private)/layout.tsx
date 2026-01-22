@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers'
 import { jwtVerify } from 'jose'
 import AppShell from '@/components/AppShell'
-import { MockFuncionarioStore } from '@/lib/org/funcionarios'
-import { MockCargoStore } from '@/lib/org/cargos'
+import { prisma } from '@/lib/db'
 import { UserSession } from '@/lib/auth/authContext'
+import { EscopoAtuacao } from '@/lib/types'
 
 export default async function PrivateLayout({
   children,
@@ -37,17 +37,18 @@ export default async function PrivateLayout({
       
       // Enriquecer com dados do Funcionário (Competência)
       if (userId !== 'anonymous') {
-          const funcionario = await MockFuncionarioStore.getByUserId(userId);
-          if (funcionario && funcionario.ativo) {
-              const cargo = await MockCargoStore.getById(funcionario.cargoId);
-              if (cargo && cargo.ativo) {
-                  user.funcionario = {
-                      id: funcionario.id,
-                      setorId: funcionario.setorId,
-                      cargoId: funcionario.cargoId,
-                      escopo: cargo.escopo
-                  };
-              }
+          const funcionario = await prisma.employee.findUnique({
+              where: { userId },
+              include: { position: true }
+          });
+          
+          if (funcionario && funcionario.active) {
+              user.funcionario = {
+                  id: funcionario.id,
+                  setorId: funcionario.sectorId,
+                  cargoId: funcionario.positionId,
+                  escopo: funcionario.position.scope as EscopoAtuacao
+              };
           }
       }
       

@@ -1,12 +1,8 @@
 import { NextResponse } from 'next/server'
-import { PendenciaService } from '@/lib/services/pendenciaService'
-import { PrioridadePendencia } from '@/lib/types'
+import { ServiceOrderService } from '@/lib/services/serviceOrderService'
+import { OrdemServicoInput, PrioridadePendencia } from '@/lib/types'
 import { AuthContext } from '@/lib/auth/authContext'
 import { getSession } from '@/lib/auth/session'
-import { ForbiddenError } from '@/lib/auth/permissions'
-
-const store: any[] = []
-let nextId = 1
 
 function getSystemSession(req: Request): AuthContext | null {
   const expected = process.env.API_SECRET_KEY;
@@ -39,21 +35,12 @@ export async function GET(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // REGRA: Usuário deve estar vinculado a Cargo e Setor para visualizar demandas (exceto Admin/Sistema)
-  const isAdmin = session.user.roles.includes('ADMIN');
-  const isSystem = session.user.roles.includes('SISTEMA');
-
-  if (!isAdmin && !isSystem) {
-      if (!session.user.funcionario) {
-          return NextResponse.json(
-            { error: 'Acesso negado. É necessário estar vinculado a um Cargo e Setor para visualizar demandas.' }, 
-            { status: 403 }
-          );
-      }
-      // Futuro: Implementar filtro de escopo para OS aqui também
+  try {
+      const orders = await ServiceOrderService.list(session);
+      return NextResponse.json(orders);
+  } catch (error: any) {
+      return NextResponse.json({ error: error.message }, { status: error.message.includes('Acesso negado') ? 403 : 500 });
   }
-
-  return NextResponse.json(store);
 }
 
 export async function POST(req: Request) {
@@ -68,62 +55,33 @@ export async function POST(req: Request) {
   }
 
   try {
-    const body = await req.json()
-    
-    // NOTE: Proxy logic disabled to support local OS management and custom numbering
-    // const base = process.env.LOCAPP_BASE_URL
-    // ...
+    const body = await req.json();
 
-    let id = String(nextId++)
-    if (body.Contrato) {
-        const contractOrders = store.filter(o => o.Contrato === body.Contrato)
-        let maxSeq = 0
-        for (const o of contractOrders) {
-            const parts = String(o.id).split('-')
-            if (parts.length === 2 && parts[0] === String(body.Contrato)) {
-                const seq = parseInt(parts[1], 10)
-                if (!isNaN(seq) && seq > maxSeq) maxSeq = seq
-            }
-        }
-        id = `${body.Contrato}-${maxSeq + 1}`
-    }
-
-    const order = { id, ...body, createdAt: new Date().toISOString() }
-    store.push(order)
-
-    // -------------------------------------------------------------------------
-    // NOVA LÓGICA: Criar Pendência automaticamente vinculada à OS
-    // -------------------------------------------------------------------------
-    
     // Normalizar prioridade
-    let prio: PrioridadePendencia = 'MEDIA'
-    if (body.prioridade === 'alta') prio = 'ALTA'
-    if (body.prioridade === 'baixa') prio = 'BAIXA'
+    let prio: PrioridadePendencia = 'MEDIA';
+    if (body.prioridade === 'alta' || body.prioridade === 'ALTA') prio = 'ALTA';
+    if (body.prioridade === 'baixa' || body.prioridade === 'BAIXA') prio = 'BAIXA';
 
-    // O Service agora valida se o usuário (ou sistema) tem permissão de CRIAR pendência
-    await PendenciaService.criar({
-        titulo: `OS #${id} - ${body.Nome || 'Cliente'}`,
-        descricao: body.Descricao || body.Observacoes || 'Gerado automaticamente via OS',
-        tipo: 'OS',
-        status: 'PENDENTE',
+    const input: OrdemServicoInput = {
+        cliente: {
+            codigo: body.Codigo || 0,
+            nome: body.Nome || 'Cliente Sem Nome',
+            documento: body.Documento || ''
+        },
+        contrato: body.Contrato,
+        endereco: body.Endereco || '',
+        contato: body.Contato || '',
         prioridade: prio,
-        origemId: id,
-        origemTipo: 'OS',
-        criadoPor: session.user.id,
-        dataPrevisao: body.dataPrevista || undefined,
-        tags: [body.Nome, body.Contrato ? `Contrato: ${body.Contrato}` : ''].filter(Boolean) as string[]
-    }, session)
+        dataPrevista: body.dataPrevista || new Date().toISOString(),
+        descricao: body.Descricao || '',
+        observacoes: body.Observacoes
+    };
 
-    return NextResponse.json(order, { status: 201 })
-  } catch (err: any) {
-    console.error('Erro ao criar OS:', err)
-    
-    if (err instanceof ForbiddenError) {
-        return NextResponse.json({ error: err.message }, { status: 403 });
-    }
+    const order = await ServiceOrderService.create(input, session);
+    return NextResponse.json(order);
 
-    const status = err?.response?.status || 500
-    const data = err?.response?.data || { error: 'Erro ao criar OS' }
-    return NextResponse.json(data, { status })
+  } catch (error: any) {
+    console.error('Erro ao criar OS:', error);
+    return NextResponse.json({ error: error.message || 'Erro interno ao criar OS' }, { status: 500 });
   }
 }

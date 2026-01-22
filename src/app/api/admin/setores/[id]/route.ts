@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MockSetorStore } from '@/lib/org/setores';
+import { SetorService } from '@/lib/services/setorService';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 
@@ -32,10 +32,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     
     try {
         const body = await req.json();
-        const existing = await MockSetorStore.getById(id);
+        const existing = await SetorService.buscarPorId(id);
         if (!existing) return NextResponse.json({ error: 'Not Found' }, { status: 404 });
         
-        const updated = await MockSetorStore.save({ ...existing, ...body, updatedAt: new Date().toISOString() });
+        const updated = await SetorService.atualizar(id, body, context);
         return NextResponse.json(updated);
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 400 });
@@ -51,7 +51,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     const { id } = await params;
     
     try {
-        await MockSetorStore.delete(id);
+        await SetorService.excluir(id, context);
         return NextResponse.json({ success: true });
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 400 });

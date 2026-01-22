@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { MockSetorStore } from '@/lib/org/setores';
+import { SetorService } from '@/lib/services/setorService';
 import { AuthContext } from '@/lib/auth/authContext';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
@@ -30,7 +30,7 @@ export async function GET() {
     if (!context.user.roles.includes('ADMIN')) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    const data = await MockSetorStore.getAll();
+    const data = await SetorService.listar();
     return NextResponse.json(data);
 }
 
@@ -42,12 +42,7 @@ export async function POST(req: NextRequest) {
     
     try {
         const body = await req.json();
-        const newItem = await MockSetorStore.save({
-            ...body,
-            id: body.id || `setor-${Date.now()}`,
-            createdAt: new Date().toISOString(),
-            ativo: body.ativo ?? true
-        });
+        const newItem = await SetorService.criar(body, context);
         return NextResponse.json(newItem);
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 400 });

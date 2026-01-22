@@ -1,30 +1,100 @@
 import { randomUUID } from 'crypto';
 import { User, AuthContext } from '@/lib/auth/authContext';
-import { MockUserStore } from '@/lib/auth/mockUsers';
 import { assertPermission, ForbiddenError } from '@/lib/auth/permissions';
 import { DEFAULT_SYSTEM_CONFIG } from '@/lib/config/systemConfig';
-import { DEFAULT_USER_PARAMETERS } from '@/lib/config/systemParameters';
+import { DEFAULT_USER_PARAMETERS, UserParameters } from '@/lib/config/systemParameters';
+import { prisma } from '@/lib/db';
+import { SystemConfig } from '@/lib/config/systemConfig';
+
+// Helper to map Prisma User to App User
+async function mapPrismaUserToAppUser(prismaUser: any, globalConfig: SystemConfig): Promise<User> {
+  return {
+    id: prismaUser.id,
+    name: prismaUser.name,
+    email: prismaUser.email,
+    password: prismaUser.passwordHash, // Mapping hash to password field for compatibility
+    roles: prismaUser.roles.map((r: any) => r.roleId),
+    active: prismaUser.active,
+    configuracoes: globalConfig, // Using global config as user config for now (migration strategy)
+    parametros: (prismaUser.parameters as UserParameters) || DEFAULT_USER_PARAMETERS,
+    createdAt: prismaUser.createdAt.toISOString(),
+    updatedAt: prismaUser.updatedAt.toISOString()
+  };
+}
+
+// Helper to get Global Config
+async function getSystemConfig(): Promise<SystemConfig> {
+  const config = await prisma.systemConfig.findUnique({ where: { id: 1 } });
+  return (config?.config as SystemConfig) || DEFAULT_SYSTEM_CONFIG;
+}
+
+import { hashPassword } from '@/lib/auth/password';
 
 export const UserService = {
   async listar(context: AuthContext): Promise<User[]> {
     // Apenas quem pode gerenciar usuários vê a lista completa
     await assertPermission(context, 'USUARIO:GERENCIAR');
-    return MockUserStore.getAll();
+    
+    const users = await prisma.user.findMany({
+      include: { roles: true }
+    });
+
+    const globalConfig = await getSystemConfig();
+    return Promise.all(users.map(u => mapPrismaUserToAppUser(u, globalConfig)));
+  },
+
+  async listarSimples(context: AuthContext): Promise<Pick<User, 'id' | 'name' | 'email' | 'roles'>[]> {
+    // Permite que qualquer usuário autenticado veja a lista para atribuições (comboboxes)
+    if (!context.user) throw new ForbiddenError('Não autenticado');
+
+    const users = await prisma.user.findMany({
+        where: { active: true },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            roles: { select: { roleId: true } }
+        }
+    });
+
+    return users.map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        roles: u.roles.map(r => r.roleId as any)
+    }));
   },
 
   async buscarPorId(id: string, context: AuthContext): Promise<User | null> {
-    const user = await MockUserStore.getById(id);
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: { roles: true }
+    });
+    
     if (!user) return null;
 
     // Permite ver a si mesmo OU se tiver permissão de gerenciar
     const isSelf = context.user.id === id;
-    const canManage = context.user.roles.includes('ADMIN'); // Simplificação ou usar hasPermission
+    const canManage = context.user.roles.includes('ADMIN');
 
     if (!isSelf && !canManage) {
        throw new ForbiddenError('Acesso negado aos dados deste usuário.');
     }
     
-    return user;
+    const globalConfig = await getSystemConfig();
+    return mapPrismaUserToAppUser(user, globalConfig);
+  },
+
+  // Internal use (Login) - No AuthContext check
+  async buscarPorEmail(email: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { roles: true }
+    });
+
+    if (!user) return null;
+    const globalConfig = await getSystemConfig();
+    return mapPrismaUserToAppUser(user, globalConfig);
   },
 
   async criar(dados: Pick<User, 'name' | 'email' | 'password' | 'roles'>, context: AuthContext): Promise<User> {
@@ -39,29 +109,45 @@ export const UserService = {
     }
 
     // Validar email único
-    const existing = await MockUserStore.getByEmail(dados.email);
+    const existing = await prisma.user.findUnique({ where: { email: dados.email } });
     if (existing) {
         throw new Error('Email já cadastrado.');
     }
 
-    const newUser: User = {
-        id: randomUUID(),
-        name: dados.name,
-        email: dados.email,
-        password: dados.password || '123', // Senha padrão se não informada
-        roles: dados.roles,
-        active: true,
-        // Inicializa com padrões
-        configuracoes: DEFAULT_SYSTEM_CONFIG, 
-        parametros: DEFAULT_USER_PARAMETERS,
-        createdAt: new Date().toISOString()
-    };
+    if (!dados.password) {
+        throw new Error('Senha é obrigatória para criação de usuário.');
+    }
+
+    const passwordHash = await hashPassword(dados.password);
+
+    // Transaction to create User and Roles
+    const newUser = await prisma.$transaction(async (tx) => {
+      const created = await tx.user.create({
+        data: {
+          name: dados.name,
+          email: dados.email,
+          passwordHash: passwordHash,
+          active: true,
+          parameters: DEFAULT_USER_PARAMETERS as any,
+          roles: {
+            create: dados.roles.map(roleId => ({ roleId }))
+          }
+        },
+        include: { roles: true }
+      });
+      return created;
+    });
     
-    return MockUserStore.save(newUser);
+    const globalConfig = await getSystemConfig();
+    return mapPrismaUserToAppUser(newUser, globalConfig);
   },
 
   async atualizar(id: string, dados: Partial<User>, context: AuthContext): Promise<User> {
-      const user = await MockUserStore.getById(id);
+      const user = await prisma.user.findUnique({
+        where: { id },
+        include: { roles: true }
+      });
+
       if (!user) throw new Error('Usuário não encontrado.');
 
       const isSelf = context.user.id === id;
@@ -82,7 +168,8 @@ export const UserService = {
 
       // Regra Crítica: Apenas ADMIN promove/rebaixa ADMIN
       if (dados.roles) {
-          const targetIsAdmin = user.roles.includes('ADMIN');
+          const currentRoles = user.roles.map(r => r.roleId);
+          const targetIsAdmin = currentRoles.includes('ADMIN');
           const newRolesIsAdmin = dados.roles.includes('ADMIN');
 
           // Se está tentando dar Admin ou tirar Admin
@@ -95,11 +182,17 @@ export const UserService = {
 
       // Regra: Admin desativar o último ADMIN
       if (dados.active === false) {
-          const user = await MockUserStore.getById(id);
-          if (user?.roles.includes('ADMIN')) {
-               const allUsers = await MockUserStore.getAll();
-               const activeAdmins = allUsers.filter(u => u.active && u.roles.includes('ADMIN') && u.id !== id);
-               if (activeAdmins.length === 0) {
+          const currentRoles = user.roles.map(r => r.roleId);
+          if (currentRoles.includes('ADMIN')) {
+               const activeAdminsCount = await prisma.user.count({
+                 where: {
+                   active: true,
+                   roles: { some: { roleId: 'ADMIN' } },
+                   id: { not: id }
+                 }
+               });
+               
+               if (activeAdminsCount === 0) {
                    throw new Error('Não é possível desativar o último administrador do sistema.');
                }
           }
@@ -113,29 +206,109 @@ export const UserService = {
       if (dados.configuracoes && !isAdmin) {
           throw new ForbiddenError('Apenas administradores podem alterar configurações globais.');
       }
+
+      const updateData: any = {};
+      if (dados.name) updateData.name = dados.name;
+      if (dados.email) updateData.email = dados.email;
+      if (dados.active !== undefined) updateData.active = dados.active;
+      if (dados.parametros) updateData.parameters = dados.parametros;
+      if (dados.password) updateData.passwordHash = await hashPassword(dados.password);
       
-      const updated = { ...user, ...dados };
-      return MockUserStore.save(updated);
+      // Update User
+      const updatedUser = await prisma.$transaction(async (tx) => {
+          // 1. Atualiza dados básicos
+          const updated = await tx.user.update({
+              where: { id },
+              data: updateData,
+              include: { roles: true }
+          });
+
+          // 2. Atualiza Roles se fornecidas
+          if (dados.roles) {
+              // Remove todas e readiciona (estratégia simples)
+              // Em produção idealmente faria diff, mas aqui garante consistência
+              await tx.userRole.deleteMany({ where: { userId: id } });
+              await tx.userRole.createMany({
+                  data: dados.roles.map(roleId => ({
+                      userId: id,
+                      roleId
+                  }))
+              });
+          }
+          
+          return await tx.user.findUnique({ where: { id }, include: { roles: true } });
+      });
+
+      if (!updatedUser) throw new Error('Erro ao atualizar usuário.');
+
+      const globalConfig = await getSystemConfig();
+      return mapPrismaUserToAppUser(updatedUser, globalConfig);
+  }
+};
+          throw new ForbiddenError('Apenas administradores podem alterar configurações globais.');
+      }
+      
+      // Update logic
+      const updatedUser = await prisma.$transaction(async (tx) => {
+        // Update basic fields
+        const updateData: any = {};
+        if (dados.name) updateData.name = dados.name;
+        if (dados.email) updateData.email = dados.email;
+        if (dados.active !== undefined) updateData.active = dados.active;
+        if (dados.parametros) updateData.parameters = dados.parametros;
+        if (dados.password) updateData.passwordHash = await hashPassword(dados.password);
+
+        // Update Roles if provided
+        if (dados.roles) {
+          // Delete existing
+          await tx.userRole.deleteMany({ where: { userId: id } });
+          // Create new
+          await tx.userRole.createMany({
+            data: dados.roles.map(roleId => ({ userId: id, roleId }))
+          });
+        }
+
+        // Update User
+        return tx.user.update({
+          where: { id },
+          data: updateData,
+          include: { roles: true }
+        });
+      });
+
+      const globalConfig = await getSystemConfig();
+      return mapPrismaUserToAppUser(updatedUser, globalConfig);
   },
 
   async excluir(id: string, context: AuthContext): Promise<void> {
       await assertPermission(context, 'USUARIO:GERENCIAR');
       
-      const user = await MockUserStore.getById(id);
+      const user = await prisma.user.findUnique({
+        where: { id },
+        include: { roles: true }
+      });
+
       if (!user) throw new Error('Usuário não encontrado.');
       
       if (context.user.id === id) {
            throw new ForbiddenError('Você não pode excluir sua própria conta.');
       }
       
-      if (user.roles.includes('ADMIN')) {
-           const allUsers = await MockUserStore.getAll();
-           const activeAdmins = allUsers.filter(u => u.active && u.roles.includes('ADMIN') && u.id !== id);
-           if (activeAdmins.length === 0) {
+      const userRoles = user.roles.map(r => r.roleId);
+      if (userRoles.includes('ADMIN')) {
+           const activeAdminsCount = await prisma.user.count({
+             where: {
+               active: true,
+               roles: { some: { roleId: 'ADMIN' } },
+               id: { not: id }
+             }
+           });
+
+           if (activeAdminsCount === 0) {
                throw new Error('Não é possível excluir o último administrador do sistema.');
            }
       }
       
-      await MockUserStore.delete(id);
+      await prisma.user.delete({ where: { id } });
   }
 };

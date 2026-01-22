@@ -1,52 +1,82 @@
-import { Role } from '@/lib/types';
+import { Role as AppRole, RoleName, Permission } from '@/lib/types';
 import { AuthContext } from '@/lib/auth/authContext';
-import { MockRoleStore } from '@/lib/auth/mockRoles';
-import { MockUserStore } from '@/lib/auth/mockUsers';
 import { ForbiddenError } from '@/lib/auth/permissions';
+import { prisma } from '@/lib/db';
 
 export const RoleService = {
-  async listar(context: AuthContext): Promise<Role[]> {
+  async listar(context: AuthContext): Promise<AppRole[]> {
     if (!context.user.roles.includes('ADMIN')) {
        throw new ForbiddenError('Apenas administradores podem visualizar papéis.');
     }
     
-    const roles = await MockRoleStore.getAll();
-    const users = await MockUserStore.getAll();
+    const roles = await prisma.role.findMany({
+        include: {
+            _count: {
+                select: { users: true }
+            },
+            permissions: {
+                select: { permissionId: true }
+            }
+        }
+    });
 
-    // Calcula contagem de usuários
-    return roles.map(role => ({
-      ...role,
-      userCount: users.filter(u => u.roles.includes(role.name)).length
+    return roles.map(r => ({
+        name: r.name as RoleName,
+        description: r.description || '',
+        isSystem: r.isSystem,
+        permissions: r.permissions.map(rp => rp.permissionId as Permission),
+        userCount: r._count.users
     }));
   },
 
-  async criar(role: Role, context: AuthContext): Promise<Role> {
+  async criar(role: AppRole, context: AuthContext): Promise<AppRole> {
     if (!context.user.roles.includes('ADMIN')) {
        throw new ForbiddenError('Apenas administradores podem criar papéis.');
     }
     
     if (!role.name) throw new Error('Nome do papel é obrigatório.');
 
-    const existing = await MockRoleStore.getByName(role.name);
+    const existing = await prisma.role.findUnique({ where: { id: role.name } });
     if (existing) {
       throw new Error('Papel já existe.');
     }
 
-    const newRole: Role = {
+    // Transaction to create role and permissions
+    const newRole = await prisma.$transaction(async (tx) => {
+        const created = await tx.role.create({
+            data: {
+                id: role.name,
+                name: role.name,
+                description: role.description,
+                isSystem: false
+            }
+        });
+
+        if (role.permissions && role.permissions.length > 0) {
+            await tx.rolePermission.createMany({
+                data: role.permissions.map(p => ({
+                    roleId: created.id,
+                    permissionId: p
+                }))
+            });
+        }
+        
+        return created;
+    });
+
+    return {
         ...role,
         isSystem: false,
-        permissions: role.permissions || []
+        userCount: 0
     };
-
-    return MockRoleStore.save(newRole);
   },
 
-  async atualizar(name: string, dados: Partial<Role>, context: AuthContext): Promise<Role> {
+  async atualizar(name: string, dados: Partial<AppRole>, context: AuthContext): Promise<AppRole> {
     if (!context.user.roles.includes('ADMIN')) {
        throw new ForbiddenError('Apenas administradores podem gerenciar papéis.');
     }
 
-    const role = await MockRoleStore.getByName(name);
+    const role = await prisma.role.findUnique({ where: { id: name } });
     if (!role) throw new Error('Papel não encontrado.');
 
     if (role.isSystem) {
@@ -55,11 +85,40 @@ export const RoleService = {
        }
     }
     
-    // Se for ADMIN, não pode remover certas permissões críticas?
-    // Por enquanto confiamos no bom senso do Admin, mas poderíamos validar aqui.
+    await prisma.$transaction(async (tx) => {
+        await tx.role.update({
+            where: { id: name },
+            data: {
+                description: dados.description
+            }
+        });
+        
+        if (dados.permissions) {
+            // Replace permissions
+            await tx.rolePermission.deleteMany({ where: { roleId: name } });
+            await tx.rolePermission.createMany({
+                data: dados.permissions.map(p => ({
+                    roleId: name,
+                    permissionId: p
+                }))
+            });
+        }
+    });
     
-    const updated = { ...role, ...dados };
-    return MockRoleStore.save(updated);
+    const updated = await prisma.role.findUnique({ 
+        where: { id: name },
+        include: { permissions: { select: { permissionId: true } }, _count: { select: { users: true } } }
+    });
+    
+    if (!updated) throw new Error('Erro ao recuperar papel atualizado.');
+
+    return {
+        name: updated.name as RoleName,
+        description: updated.description || '',
+        isSystem: updated.isSystem,
+        permissions: updated.permissions.map(p => p.permissionId as Permission),
+        userCount: updated._count.users
+    };
   },
 
   async excluir(name: string, context: AuthContext): Promise<void> {
@@ -67,20 +126,21 @@ export const RoleService = {
        throw new ForbiddenError('Apenas administradores podem excluir papéis.');
     }
 
-    const role = await MockRoleStore.getByName(name);
+    const role = await prisma.role.findUnique({ 
+        where: { id: name },
+        include: { _count: { select: { users: true } } }
+    });
+
     if (!role) throw new Error('Papel não encontrado.');
 
     if (role.isSystem) {
       throw new Error('Papéis do sistema não podem ser excluídos.');
     }
     
-    const users = await MockUserStore.getAll();
-    const inUse = users.some(u => u.roles.includes(name));
-    
-    if (inUse) {
+    if (role._count.users > 0) {
         throw new Error('Este papel está atribuído a um ou mais usuários e não pode ser excluído.');
     }
     
-    await MockRoleStore.delete(name);
+    await prisma.role.delete({ where: { id: name } });
   }
 };
