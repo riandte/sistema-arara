@@ -26,12 +26,42 @@ const envSchema = z.object({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
 });
 
-// Validação
-const _env = envSchema.safeParse(process.env);
+// Cache para valores validados
+const _cache: Partial<z.infer<typeof envSchema>> = {};
 
-if (!_env.success) {
-  console.error('❌ Configuração de ambiente inválida:', _env.error.format());
-  throw new Error('Variáveis de ambiente inválidas. Verifique os logs.');
-}
+// Proxy para validação lazy (sob demanda)
+export const env = new Proxy({} as z.infer<typeof envSchema>, {
+  get(target, prop) {
+    const key = prop as keyof z.infer<typeof envSchema>;
+    
+    // Retorna do cache se já validado
+    if (key in _cache) {
+      return _cache[key];
+    }
 
-export const env = _env.data;
+    const shape = envSchema.shape;
+    const fieldSchema = shape[key as keyof typeof shape];
+    
+    // Se a propriedade não está no schema, tenta pegar direto do process.env
+    if (!fieldSchema) {
+      return process.env[key as string];
+    }
+
+    // Valida apenas o campo acessado
+    const value = process.env[key as string];
+    const result = fieldSchema.safeParse(value);
+
+    if (!result.success) {
+      console.error(`❌ Variável de ambiente inválida: ${String(key)}`, result.error.format());
+      // Em build time (CI), podemos querer não quebrar se for uma variável de runtime
+      // Mas a regra é validar em runtime. Se estamos acessando, é runtime (ou build time precisando do valor).
+      // Se o build acessar DATABASE_URL, deve falhar mesmo.
+      throw new Error(`Variável de ambiente inválida: ${String(key)}`);
+    }
+
+    // Salva no cache e retorna
+    const validatedValue = result.data;
+    _cache[key] = validatedValue;
+    return validatedValue;
+  }
+});
