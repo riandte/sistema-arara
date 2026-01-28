@@ -1,6 +1,6 @@
 # Governança de Usuários e Acesso
 
-Este documento define as regras de governança, segurança e auditoria para o controle de acesso no LocApp Next.
+Este documento define as regras de governança, segurança e auditoria para o controle de acesso no ARARA.
 
 ## 1. Matriz de Capacidades por Papel
 

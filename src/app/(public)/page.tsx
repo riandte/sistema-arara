@@ -9,10 +9,10 @@ export default function Home() {
         
         <div className="mb-12">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-            Solução Rental
+            ARARA
           </h1>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Sistema Integrado de Gestão
+            Gestão de Chamados Internos
           </p>
         </div>
 

@@ -1,6 +1,6 @@
 # Modelagem Conceitual: Usuários, Papéis e Permissões (RBAC)
 
-Este documento define o modelo estrutural de controle de acesso (Role-Based Access Control) para o sistema LocApp Next.
+Este documento define o modelo estrutural de controle de acesso (Role-Based Access Control) para o sistema ARARA.
 
 ## 1. Entidades Principais
 

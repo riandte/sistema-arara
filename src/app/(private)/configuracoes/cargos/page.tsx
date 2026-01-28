@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { Cargo, Setor } from '@/lib/types';
+import { Cargo, Setor } from '@/shared/types';
 import { Plus, Pencil, Trash2, Briefcase } from 'lucide-react';
-import Modal from '@/components/ui/Modal';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import Modal from '@/frontend/components/ui/Modal';
+import ConfirmDialog from '@/frontend/components/ui/ConfirmDialog';
 
 export default function CargosPage() {
   const [items, setItems] = useState<Cargo[]>([]);

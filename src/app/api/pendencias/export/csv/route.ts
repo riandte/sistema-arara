@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { PendenciaService } from '@/lib/services/pendenciaService';
-import { getSession } from '@/lib/auth/session';
+import { PendenciaService } from '@/backend/services/pendenciaService';
+import { getSession } from '@/backend/auth/session';
 
 export async function GET(req: Request) {
   const session = await getSession(req);

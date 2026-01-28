@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { jwtVerify } from 'jose'
-import NovaOSForm from '@/components/NovaOSForm'
+import NovaOSForm from '@/frontend/components/NovaOSForm'
 
 export default async function NovaOSPage() {
   const cookieStore = await cookies()

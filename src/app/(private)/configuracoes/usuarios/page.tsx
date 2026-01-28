@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { User, Role, Setor, Cargo, Funcionario } from '@/lib/types';
+import { User, Role, Setor, Cargo, Funcionario } from '@/shared/types';
 import { Plus, Pencil, Trash2, Search, ShieldAlert, UserX, UserCheck } from 'lucide-react';
-import Modal from '@/components/ui/Modal';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import UserForm from '@/components/admin/UserForm';
+import Modal from '@/frontend/components/ui/Modal';
+import ConfirmDialog from '@/frontend/components/ui/ConfirmDialog';
+import UserForm from '@/frontend/components/admin/UserForm';
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);

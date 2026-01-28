@@ -1,6 +1,6 @@
 # Plano de Confiabilidade e Prontidão para Produção (Fase 6)
 
-Este documento define a estratégia final para garantir a robustez, segurança e estabilidade do sistema LocApp Next em ambiente de produção.
+Este documento define a estratégia final para garantir a robustez, segurança e estabilidade do sistema ARARA em ambiente de produção.
 
 ---
 

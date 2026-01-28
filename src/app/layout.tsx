@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Solução Rental',
-  description: 'Sistema de Gestão - Solução Rental Ltda',
+  title: 'ARARA',
+  description: 'ARARA - Gestão de Chamados Internos',
 }
 
 import './globals.css'

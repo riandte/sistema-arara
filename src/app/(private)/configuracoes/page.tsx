@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import { User } from '@/lib/auth/authContext'
+import { User } from '@/backend/auth/authContext'
 import { Save, AlertCircle, Loader2, User as UserIcon, Settings, Sliders } from 'lucide-react'
-import { SystemConfig } from '@/lib/config/systemConfig'
-import { UserParameters } from '@/lib/config/systemParameters'
+import { SystemConfig } from '@/backend/config/systemConfig'
+import { UserParameters } from '@/backend/config/systemParameters'
 
 export default function ConfiguracoesPage() {
   const [user, setUser] = useState<User | null>(null)

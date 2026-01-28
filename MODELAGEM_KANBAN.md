@@ -1,6 +1,6 @@
 # Modelo Funcional: Kanban de Pendências
 
-Este documento define as regras funcionais, estados e transições do sistema Kanban para gestão de Pendências no LocApp Next.
+Este documento define as regras funcionais, estados e transições do sistema Kanban para gestão de Pendências no ARARA.
 
 ## 1. Modelo de Status (Colunas do Kanban)
 
@@ -36,7 +36,7 @@ Define as mudanças de estado permitidas e proibidas para garantir a consistênc
 
 ## 3. Conceito de Kanban no Sistema
 
-O Kanban no LocApp Next **NÃO** é uma entidade separada. Ele é puramente uma **projeção visual** (View) baseada no agrupamento de Pendências pelo campo `status`.
+O Kanban no ARARA **NÃO** é uma entidade separada. Ele é puramente uma **projeção visual** (View) baseada no agrupamento de Pendências pelo campo `status`.
 
 1.  **Colunas:** São fixas e mapeadas 1:1 com os valores do ENUM `StatusPendencia`.
 2.  **Cartões:** São a representação visual da entidade `Pendencia`.

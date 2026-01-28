@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { FuncionarioService } from '@/lib/services/funcionarioService';
+import { FuncionarioService } from '@/backend/services/funcionarioService';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 

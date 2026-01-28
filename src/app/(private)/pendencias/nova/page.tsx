@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
-import { TipoPendencia, PrioridadePendencia, SetorResponsavel } from '@/lib/types'
+import { TipoPendencia, PrioridadePendencia, SetorResponsavel } from '@/shared/types'
 
 export default function NovaPendenciaPage() {
   const router = useRouter()

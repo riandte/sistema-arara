@@ -1,6 +1,6 @@
 # Guia de Implementação Técnica: Módulo Pendências
 
-Este documento traduz as regras de negócio definidas em `MODELAGEM_PENDENCIA.md`, `MODELAGEM_KANBAN.md` e `GOVERNANCA_E_MATURIDADE.md` para a arquitetura técnica do LocApp Next.
+Este documento traduz as regras de negócio definidas em `MODELAGEM_PENDENCIA.md`, `MODELAGEM_KANBAN.md` e `GOVERNANCA_E_MATURIDADE.md` para a arquitetura técnica do ARARA.
 
 ## 1. Mapeamento: Documentação → Código
 

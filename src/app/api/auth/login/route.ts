@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
 import { SignJWT } from 'jose'
-import { UserService } from '@/lib/services/userService'
-import { comparePassword } from '@/lib/auth/password'
-import { AuditService } from '@/lib/auth/audit'
-import { prisma } from '@/lib/db'
-import { EscopoAtuacao } from '@/lib/types'
+import { UserService } from '@/backend/services/userService'
+import { comparePassword } from '@/backend/auth/password'
+import { AuditService } from '@/backend/auth/audit'
+import { prisma } from '@/backend/db'
+import { EscopoAtuacao } from '@/shared/types'
+import { env } from '@/shared/env'
 
 export async function POST(req: Request) {
   let body: any = {};
@@ -17,39 +18,30 @@ export async function POST(req: Request) {
   const { username, password } = body
 
   if (!username || !password) {
-    AuditLogger.log('LOGIN_FAIL', { reason: 'missing_credentials' }, undefined, req);
+    AuditService.log('LOGIN_FAILURE', 'anonymous', { reason: 'missing_credentials' }, undefined, 'WARN', req.headers.get('x-forwarded-for') || undefined);
     return NextResponse.json({ success: false, message: 'Usuário e senha obrigatórios' }, { status: 400 })
   }
 
   try {
-    // 1. Buscar usuário (Email ou Nome - manter compatibilidade com login antigo se necessário, mas ideal é Email)
-    // O mock aceitava nome ou email. Vamos tentar manter se possível, mas UserService.buscarPorEmail é estrito.
-    // Vamos usar buscarPorEmail primeiro. Se falhar e username não parecer email, talvez buscar por nome?
-    // Melhor padronizar para Email. Mas se o usuário digitar nome, falha.
-    // Vou assumir Email por enquanto.
-    
-    // Pequeno ajuste: se UserService só busca por email, e o input for nome, vai falhar.
-    // Para produção, login deve ser email.
-    
+    // 1. Buscar usuário
     const user = await UserService.buscarPorEmail(username);
 
     if (!user) {
-        AuditLogger.log('LOGIN_FAIL', { username, reason: 'user_not_found' }, undefined, req);
+        AuditService.log('LOGIN_FAILURE', 'anonymous', { username, reason: 'user_not_found' }, undefined, 'WARN', req.headers.get('x-forwarded-for') || undefined);
         return NextResponse.json({ success: false, message: 'Usuário ou senha inválidos' }, { status: 401 })
     }
 
     // 2. Validar Senha
-    // user.password contém o hash retornado pelo UserService (mapeado de passwordHash)
     const isPasswordValid = await comparePassword(password, user.password || '');
     
     if (!isPasswordValid) {
-        AuditLogger.log('LOGIN_FAIL', { username, userId: user.id, reason: 'invalid_password' }, user.id, req);
+        AuditService.log('LOGIN_FAILURE', user.id, { username, reason: 'invalid_password' }, undefined, 'WARN', req.headers.get('x-forwarded-for') || undefined);
         return NextResponse.json({ success: false, message: 'Usuário ou senha inválidos' }, { status: 401 })
     }
 
     // 3. Validar Status
     if (!user.active) {
-        AuditLogger.log('LOGIN_FAIL', { username, userId: user.id, reason: 'inactive_user' }, user.id, req);
+        AuditService.log('LOGIN_FAILURE', user.id, { username, reason: 'inactive_user' }, undefined, 'WARN', req.headers.get('x-forwarded-for') || undefined);
         return NextResponse.json({ success: false, message: 'Conta desativada. Contate o administrador.' }, { status: 403 })
     }
 
@@ -78,9 +70,7 @@ export async function POST(req: Request) {
         funcionario: funcionarioData
     };
 
-    const secret = new TextEncoder().encode(
-      process.env.JWT_SECRET_KEY || 'default-secret-key-change-me-in-prod'
-    );
+    const secret = new TextEncoder().encode(env.JWT_SECRET_KEY);
 
     const token = await new SignJWT(payload)
       .setProtectedHeader({ alg: 'HS256' })
@@ -98,7 +88,7 @@ export async function POST(req: Request) {
       name: 'auth_token',
       value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: 60 * 60 * 8, // 8 hours
       path: '/',
@@ -108,7 +98,7 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error('Login error:', error);
-    AuditLogger.log('LOGIN_FAIL', { error: error.message }, undefined, req);
+    AuditService.log('LOGIN_FAILURE', 'system', { error: error.message }, undefined, 'ERROR', req.headers.get('x-forwarded-for') || undefined);
     return NextResponse.json({ success: false, message: 'Erro interno no servidor' }, { status: 500 })
   }
 }

@@ -110,7 +110,7 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-8 text-center text-xs text-gray-600">
-          &copy; 2025 Solução Rental Ltda. Acesso monitorado.
+          &copy; 2025 ARARA. Acesso monitorado.
         </div>
       </div>
     </div>

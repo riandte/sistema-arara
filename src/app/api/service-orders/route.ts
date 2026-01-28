@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server'
-import { ServiceOrderService } from '@/lib/services/serviceOrderService'
-import { OrdemServicoInput, PrioridadePendencia } from '@/lib/types'
-import { AuthContext } from '@/lib/auth/authContext'
-import { getSession } from '@/lib/auth/session'
+import { ServiceOrderService } from '@/backend/services/serviceOrderService'
+import { OrdemServicoInput, PrioridadePendencia } from '@/shared/types'
+import { AuthContext } from '@/backend/auth/authContext'
+import { getSession } from '@/backend/auth/session'
+
+import { env } from '@/shared/env'
 
 function getSystemSession(req: Request): AuthContext | null {
-  const expected = process.env.API_SECRET_KEY;
+  const expected = env.API_SECRET_KEY;
   // Se não houver chave configurada, não permite acesso de sistema por segurança
   if (!expected) return null; 
   
@@ -17,7 +19,7 @@ function getSystemSession(req: Request): AuthContext | null {
           user: {
               id: 'system-integration',
               name: 'Sistema Integrado',
-              email: 'system@locapp.com',
+              email: 'system@arara.com.br',
               roles: ['SISTEMA']
           }
       };

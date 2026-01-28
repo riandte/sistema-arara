@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SetorService } from '@/lib/services/setorService';
+import { SetorService } from '@/backend/services/setorService';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 

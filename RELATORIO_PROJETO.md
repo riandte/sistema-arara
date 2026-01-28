@@ -1,4 +1,4 @@
-# Relatório Técnico - Sistema Solução
+# Relatório Técnico - Sistema ARARA
 **Data:** 22/01/2026
 **Status:** MVP (Protótipo Funcional Avançado)
 **Stack:** Next.js 13+ (App Router), TypeScript, Tailwind CSS
@@ -25,7 +25,7 @@
 - [x] **Edição/Status:** Fluxo básico de alteração de status e conclusão.
 
 ### Módulo de Ordem de Serviço (OS)
-- [x] **Integração LocApp:** Proxy/Cliente para buscar dados de Clientes e Contratos em API externa.
+- [x] **Integração Legado:** Proxy/Cliente para buscar dados de Clientes e Contratos em API externa.
 - [x] **Criação de OS:** Formulário específico para abertura de demandas de clientes.
 
 ---
@@ -37,7 +37,7 @@ Estes itens são **obrigatórios** antes de colocar o sistema em produção real
 ### A. Persistência de Dados (Banco de Dados)
 **Problema:** O sistema atual usa `MockStores` que salvam em arquivos JSON locais (`/data/*.json`).
 **Risco:** Em hospedagens modernas (Vercel, Netlify, AWS Lambda), o sistema de arquivos é temporário. **Todos os dados serão perdidos** a cada deploy ou reinício.
-**Solução Recomendada:**
+**Abordagem Recomendada:**
 1. Instalar **Prisma ORM**.
 2. Definir schema do banco (PostgreSQL ou MySQL).
 3. Criar serviços reais (`DbUserStore`, `DbPendenciaStore`) substituindo os Mocks.
@@ -45,7 +45,7 @@ Estes itens são **obrigatórios** antes de colocar o sistema em produção real
 
 ### B. Segurança de Autenticação
 **Problema:** As senhas não estão criptografadas e há senhas mestras de teste no código.
-**Solução Recomendada:**
+**Abordagem Recomendada:**
 1. Implementar **bcrypt** para hash de senhas.
 2. Remover lógicas de `pass === '123456'` dos arquivos de login.
 3. Configurar variáveis de ambiente (`.env`) seguras para produção.

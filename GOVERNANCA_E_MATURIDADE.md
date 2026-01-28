@@ -1,12 +1,12 @@
 # Governança, Maturidade e Consolidação do Sistema (Fase 4)
 
-Este documento consolida as regras finais, padrões e checklists para garantir a estabilidade e previsibilidade do módulo de Pendências do LocApp Next.
+Este documento consolida as regras finais, padrões e checklists para garantir a estabilidade e previsibilidade do módulo de Pendências do ARARA.
 
 ---
 
 ## 1. Resumo Consolidado do Sistema de Pendências
 
-O sistema LocApp Next evoluiu de um gerenciador de OS para um sistema orientado a **Pendências**. A Pendência é a unidade atômica de trabalho.
+O sistema ARARA evoluiu de um gerenciador de OS para um sistema orientado a **Pendências**. A Pendência é a unidade atômica de trabalho.
 
 *   **Núcleo:** Entidade `Pendencia` (Interface TypeScript definida).
 *   **Fluxo:** Baseado em estados (Kanban) com 4 status: `PENDENTE`, `EM_ANDAMENTO`, `CONCLUIDO`, `CANCELADO`.

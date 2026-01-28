@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { RoleService } from '@/lib/services/roleService';
-import { AuthContext } from '@/lib/auth/authContext';
+import { RoleService } from '@/backend/services/roleService';
+import { AuthContext } from '@/backend/auth/authContext';
 
 async function getContext(req: NextRequest): Promise<AuthContext> {
     const { cookies } = await import('next/headers');

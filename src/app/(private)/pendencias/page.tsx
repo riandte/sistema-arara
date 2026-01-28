@@ -2,16 +2,16 @@
 "use client"
 
 import { useEffect, useState, useCallback } from 'react'
-import { Pendencia, StatusPendencia } from '@/lib/types'
+import { Pendencia, StatusPendencia } from '@/shared/types'
 import { Kanban, RefreshCw, Plus, LayoutGrid, List, Search } from 'lucide-react'
 import Link from 'next/link'
-import { KanbanBoard } from '@/components/kanban/KanbanBoard'
-import { PendenciasTable } from '@/components/pendencias/PendenciasTable'
-import { ModalPendenciaDetalhe } from '@/components/kanban/ModalPendenciaDetalhe'
-import { PendenciasFilter } from '@/components/pendencias/PendenciasFilter'
-import { ExportButton } from '@/components/pendencias/ExportButton'
-import { ModalConclusaoPendencia } from '@/components/pendencias/ModalConclusaoPendencia'
-import { PendenciaFilters } from '@/lib/services/pendenciaService'
+import { KanbanBoard } from '@/frontend/components/kanban/KanbanBoard'
+import { PendenciasTable } from '@/frontend/components/pendencias/PendenciasTable'
+import { ModalPendenciaDetalhe } from '@/frontend/components/kanban/ModalPendenciaDetalhe'
+import { PendenciasFilter } from '@/frontend/components/pendencias/PendenciasFilter'
+import { ExportButton } from '@/frontend/components/pendencias/ExportButton'
+import { ModalConclusaoPendencia } from '@/frontend/components/pendencias/ModalConclusaoPendencia'
+import { PendenciaFilters } from '@/backend/services/pendenciaService'
 
 type ViewMode = 'KANBAN' | 'TABLE'
 

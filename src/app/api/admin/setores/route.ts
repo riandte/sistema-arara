@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { SetorService } from '@/lib/services/setorService';
-import { AuthContext } from '@/lib/auth/authContext';
+import { SetorService } from '@/backend/services/setorService';
+import { AuthContext } from '@/backend/auth/authContext';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 

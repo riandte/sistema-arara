@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { consultarCliente } from '../../../../lib/locapp/client'
+import { consultarCliente } from '../../../../backend/locapp/client'
 
 function validate(req: Request) {
   const expected = process.env.API_SECRET_KEY

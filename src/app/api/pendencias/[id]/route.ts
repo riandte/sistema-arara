@@ -1,8 +1,8 @@
 
 import { NextResponse } from 'next/server';
-import { PendenciaService } from '@/lib/services/pendenciaService';
-import { getSession } from '@/lib/auth/session';
-import { ForbiddenError } from '@/lib/auth/permissions';
+import { PendenciaService } from '@/backend/services/pendenciaService';
+import { getSession } from '@/backend/auth/session';
+import { ForbiddenError } from '@/backend/auth/permissions';
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getSession(req);

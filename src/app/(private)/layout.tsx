@@ -1,9 +1,9 @@
 import { cookies } from 'next/headers'
 import { jwtVerify } from 'jose'
-import AppShell from '@/components/AppShell'
-import { prisma } from '@/lib/db'
-import { UserSession } from '@/lib/auth/authContext'
-import { EscopoAtuacao } from '@/lib/types'
+import AppShell from '@/frontend/components/AppShell'
+import { prisma } from '@/backend/db'
+import { UserSession } from '@/backend/auth/authContext'
+import { EscopoAtuacao } from '@/shared/types'
 
 export default async function PrivateLayout({
   children,

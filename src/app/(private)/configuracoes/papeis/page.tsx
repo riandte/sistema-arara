@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { Role } from '@/lib/types';
+import { Role } from '@/shared/types';
 import { Plus, Pencil, Trash2, Shield, Lock } from 'lucide-react';
-import Modal from '@/components/ui/Modal';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import RoleForm from '@/components/admin/RoleForm';
+import Modal from '@/frontend/components/ui/Modal';
+import ConfirmDialog from '@/frontend/components/ui/ConfirmDialog';
+import RoleForm from '@/frontend/components/admin/RoleForm';
 
 export default function RolesPage() {
   const [roles, setRoles] = useState<Role[]>([]);

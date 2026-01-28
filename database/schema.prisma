@@ -1,0 +1,290 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==============================================================================
+// RBAC (Role-Based Access Control) & Users
+// ==============================================================================
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  active        Boolean   @default(true)
+  parameters    Json?     // Armazena UserParameters
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  roles         UserRole[]
+  employee      Employee?
+  
+  // Auditoria
+  createdPendencies    Pendency[]         @relation("CreatedBy")
+  responsiblePendencies Pendency[]        @relation("Responsible")
+  pendencyHistory      PendencyHistory[]
+
+  @@map("users")
+}
+
+model Role {
+  id          String   @id // Ex: 'ADMIN', 'OPERADOR'
+  name        String
+  description String?
+  isSystem    Boolean  @default(false) @map("is_system")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  users       UserRole[]
+  permissions RolePermission[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String   @id // Ex: 'PENDENCIA:CRIAR'
+  description String?
+
+  // Relacionamentos
+  roles       RolePermission[]
+
+  @@map("permissions")
+}
+
+// Tabela associativa Users <-> Roles
+model UserRole {
+  userId String @map("user_id")
+  roleId String @map("role_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("users_roles")
+}
+
+// Tabela associativa Roles <-> Permissions
+model RolePermission {
+  roleId       String @map("role_id")
+  permissionId String @map("permission_id")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("roles_permissions")
+}
+
+// ==============================================================================
+// ESTRUTURA ORGANIZACIONAL
+// ==============================================================================
+
+model Sector {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  positions         PositionSector[]
+  employees         Employee[]
+  responsiblePendencies Pendency[]
+
+  @@map("sectors")
+}
+
+enum Scope {
+  INDIVIDUAL
+  SETORIAL
+}
+
+model Position {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  scope       Scope
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  sectors     PositionSector[]
+  employees   Employee[]
+
+  @@map("positions")
+}
+
+// Tabela associativa Positions <-> Sectors (Onde o cargo pode atuar)
+model PositionSector {
+  positionId String @map("position_id")
+  sectorId   String @map("sector_id")
+
+  position Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  sector   Sector   @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+
+  @@id([positionId, sectorId])
+  @@map("positions_sectors")
+}
+
+model Employee {
+  id             String   @id @default(uuid())
+  name           String
+  corporateEmail String   @unique @map("corporate_email")
+  sectorId       String   @map("sector_id")
+  positionId     String   @map("position_id")
+  userId         String?  @unique @map("user_id")
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  sector   Sector   @relation(fields: [sectorId], references: [id])
+  position Position @relation(fields: [positionId], references: [id])
+  user     User?    @relation(fields: [userId], references: [id])
+
+  @@map("employees")
+}
+
+// ==============================================================================
+// DOMÍNIO DE NEGÓCIO (CORE)
+// ==============================================================================
+
+enum ServiceOrderStatus {
+  ABERTA
+  EM_ANDAMENTO
+  CONCLUIDA
+  CANCELADA
+}
+
+enum Priority {
+  BAIXA
+  MEDIA
+  ALTA
+}
+
+model ServiceOrder {
+  id            String             @id @default(uuid())
+  number        Int                @default(autoincrement())
+  clientData    Json               @map("client_data") // Snapshot dos dados do cliente
+  status        ServiceOrderStatus @default(ABERTA)
+  priority      Priority           @default(MEDIA)
+  description   String             @db.Text
+  scheduledDate DateTime           @map("scheduled_date")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  derivedPendencies Pendency[]
+
+  @@map("service_orders")
+}
+
+enum PendencyType {
+  OS
+  FINANCEIRO
+  ADMINISTRATIVO
+  TI
+  COMERCIAL
+  OUTRO
+}
+
+enum PendencyStatus {
+  PENDENTE
+  EM_ANDAMENTO
+  CONCLUIDO
+  CANCELADO
+  ENCERRADA_SEM_CONCLUSAO
+}
+
+enum OriginType {
+  MANUAL
+  OS
+}
+
+enum ConclusionType {
+  CONCLUIDO
+  SEM_CONCLUSAO
+}
+
+model Pendency {
+  id                  String          @id @default(uuid())
+  title               String
+  description         String?         @db.Text
+  type                PendencyType
+  status              PendencyStatus  @default(PENDENTE)
+  priority            Priority        @default(MEDIA)
+  
+  // Origem
+  originType          OriginType      @map("origin_type")
+  originOsId          String?         @map("origin_os_id")
+  
+  // Responsabilidades
+  createdBy           String          @map("created_by")
+  responsibleId       String?         @map("responsible_id")
+  responsibleSectorId String?         @map("responsible_sector_id")
+  
+  // Encerramento
+  conclusionText      String?         @map("conclusion_text") @db.Text
+  conclusionType      ConclusionType? @map("conclusion_type")
+  
+  // Datas
+  dueDate             DateTime?       @map("due_date")
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+  completedAt         DateTime?       @map("completed_at")
+
+  // Relacionamentos
+  originOs            ServiceOrder?   @relation(fields: [originOsId], references: [id])
+  creator             User            @relation("CreatedBy", fields: [createdBy], references: [id])
+  responsible         User?           @relation("Responsible", fields: [responsibleId], references: [id])
+  responsibleSector   Sector?         @relation(fields: [responsibleSectorId], references: [id])
+  history             PendencyHistory[]
+
+  @@map("pendencies")
+}
+
+model PendencyHistory {
+  id              String         @id @default(uuid())
+  pendencyId      String         @map("pendency_id")
+  userId          String         @map("user_id")
+  oldStatus       PendencyStatus @map("old_status")
+  newStatus       PendencyStatus @map("new_status")
+  observation     String?        @db.Text
+  createdAt       DateTime       @default(now()) @map("created_at")
+
+  // Relacionamentos
+  pendency        Pendency       @relation(fields: [pendencyId], references: [id], onDelete: Cascade)
+  user            User           @relation(fields: [userId], references: [id])
+
+  @@map("pendency_history")
+}
+
+model SystemConfig {
+  id        Int      @id @default(1) // Singleton
+  config    Json     // Armazena SystemConfig global
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_configs")
+}
+
+model AuditEvent {
+  id        String   @id @default(uuid())
+  timestamp DateTime @default(now())
+  level     String
+  event     String
+  actorId   String   @map("actor_id")
+  targetId  String?  @map("target_id")
+  ip        String?
+  details   Json?
+
+  @@map("audit_events")
+}

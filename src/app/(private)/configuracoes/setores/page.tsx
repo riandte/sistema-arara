@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { Setor } from '@/lib/types';
+import { Setor } from '@/shared/types';
 import { Plus, Pencil, Trash2, Building2 } from 'lucide-react';
-import Modal from '@/components/ui/Modal';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import Modal from '@/frontend/components/ui/Modal';
+import ConfirmDialog from '@/frontend/components/ui/ConfirmDialog';
 
 export default function SetoresPage() {
   const [items, setItems] = useState<Setor[]>([]);

@@ -1,15 +1,22 @@
 {
-  "name": "locapp-next",
+  "name": "arara-gestao-chamados",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "start:prod": "next start",
+    "postinstall": "prisma generate",
+    "migrate:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "lint": "next lint"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
+    "@supabase/supabase-js": "^2.93.2",
     "@tanstack/react-table": "^8.21.3",
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
@@ -17,6 +24,7 @@
     "jose": "^6.1.3",
     "lucide-react": "^0.560.0",
     "next": "^16.0.8",
+    "pg": "^8.17.2",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-hook-form": "^7.68.0",
@@ -26,6 +34,7 @@
     "@tailwindcss/postcss": "^4.0.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^25.0.0",
+    "@types/pg": "^8.16.0",
     "@types/react": "19.2.7",
     "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "^1.0.0",
@@ -33,9 +42,8 @@
     "prisma": "^7.3.0",
     "tailwindcss": "^4.1.18",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
-  },
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

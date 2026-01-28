@@ -1,6 +1,6 @@
 # Estratégia de Testes e Qualidade: Módulo Pendências
 
-Este documento define a estratégia de QA (Quality Assurance) para garantir que o módulo de Pendências do LocApp Next seja robusto, seguro e à prova de regressões.
+Este documento define a estratégia de QA (Quality Assurance) para garantir que o módulo de Pendências do ARARA seja robusto, seguro e à prova de regressões.
 
 A premissa fundamental é: **O Backend é a única fonte de verdade.** Portanto, o foco massivo dos testes estará na validação das regras de negócio, segurança e integridade no servidor.
 

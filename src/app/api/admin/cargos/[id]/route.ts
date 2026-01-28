@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { CargoService } from '@/lib/services/cargoService';
+import { CargoService } from '@/backend/services/cargoService';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 

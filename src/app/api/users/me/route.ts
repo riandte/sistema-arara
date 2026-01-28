@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getSession } from '@/lib/auth/session';
-import { UserService } from '@/lib/services/userService';
+import { getSession } from '@/backend/auth/session';
+import { UserService } from '@/backend/services/userService';
 
 export async function GET(req: Request) {
   const session = await getSession(req);

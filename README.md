@@ -1,6 +1,6 @@
-# Solução Rental - Sistema de Gestão
+# ARARA - Gestão de Chamados Internos
 
-Sistema web moderno e integrado para gestão empresarial, desenvolvido sob medida para a **Solução Rental Ltda**. O sistema foca em eficiência, usabilidade e design moderno, integrando-se diretamente ao ERP LocApp.
+Sistema web moderno e integrado para gestão de chamados internos, desenvolvido sob medida para a **ARARA**. O sistema foca em eficiência, usabilidade e design moderno, integrando-se diretamente ao ERP Legado.
 
 ## 🚀 Funcionalidades
 
@@ -21,7 +21,7 @@ Módulo completo para visualização e acompanhamento de contratos de locação.
 Ferramenta para abertura e gestão de ordens de serviço.
 - **Criação de OS**: Formulário intuitivo para abertura de novas ordens.
 - **Vínculo com Contratos**: Seleção de contratos ativos diretamente na abertura da OS.
-- **Integração de Clientes**: Busca automática de clientes via CPF/CNPJ (integrado à base de dados LocApp).
+- **Integração de Clientes**: Busca automática de clientes via CPF/CNPJ (integrado à base de dados legada).
 - **Numeração Personalizada**: Controle sequencial de OS por contrato (ex: 1234/1, 1234/2).
 - **Geração de Documentos**: Visualização e impressão automática da OS em formato PDF.
 
@@ -33,7 +33,7 @@ O projeto foi construído com as tecnologias mais recentes do mercado:
 - **[Tailwind CSS 4](https://tailwindcss.com/)**: Estilização utilitária avançada para um design moderno e customizável.
 - **[TypeScript](https://www.typescriptlang.org/)**: Superset JavaScript para maior segurança e manutenibilidade do código.
 - **[Lucide React](https://lucide.dev/)**: Biblioteca de ícones moderna e leve.
-- **Axios / Fetch API**: Para comunicação eficiente com APIs externas (LocApp).
+- **Axios / Fetch API**: Para comunicação eficiente com APIs externas (Legado).
 
 ## ⚙️ Configuração e Instalação
 
@@ -45,8 +45,8 @@ O projeto foi construído com as tecnologias mais recentes do mercado:
 
 1. **Clone o repositório**
    ```bash
-   git clone https://github.com/seu-usuario/sistema-solucao.git
-   cd sistema-solucao
+   git clone https://github.com/seu-usuario/arara.git
+   cd arara
    ```
 
 2. **Instale as dependências**
@@ -79,4 +79,4 @@ Projeto desenvolvido por **Rian Duarte**.
 [![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/riandte/)
 
 ---
-&copy; 2025 Solução Rental Ltda. Todos os direitos reservados.
+&copy; 2025 ARARA. Todos os direitos reservados.

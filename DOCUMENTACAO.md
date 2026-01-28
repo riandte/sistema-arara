@@ -1,8 +1,8 @@
-# Documentação Técnica - Sistema Solução Rental (LocApp Next)
+# Documentação Técnica - Sistema ARARA
 
 ## 1. Visão Geral
 
-O **LocApp Next** (Solução Rental) é uma aplicação web moderna desenvolvida para modernizar a gestão operacional da Solução Rental. 
+O **ARARA** é uma aplicação web moderna desenvolvida para modernizar a gestão operacional da ARARA. 
 
 **Mudança Arquitetural (v2):** O sistema agora é centrado na entidade **Pendência** (Unidade de Trabalho), substituindo a Ordem de Serviço (OS) como núcleo. A OS passa a ser apenas um dos possíveis gatilhos para a criação de uma Pendência.
 
@@ -10,7 +10,7 @@ O **LocApp Next** (Solução Rental) é uma aplicação web moderna desenvolvida
 - **Pendência-Centric**: Gestão unificada de tarefas (Operacionais, Administrativas, Financeiras).
 - **Interface Moderna**: Design "Dark Modern" com glassmorphism e Kanban Board.
 - **Autenticação Segura**: Proteção de rotas via Middleware e JWT.
-- **Integração Híbrida**: Capacidade de operar integrado ao ERP legado (LocApp) ou em modo Mock.
+- **Integração Híbrida**: Capacidade de operar integrado ao ERP Legado ou em modo Mock.
 - **Impressão Client-Side**: Geração de documentos PDF formatados diretamente no navegador.
 
 ---
@@ -70,7 +70,7 @@ src/
 3.  **Automação**: O backend invoca `PendenciaService` e cria uma Pendência do tipo `OS`, copiando dados relevantes (Cliente, Prioridade, Descrição).
 4.  A nova tarefa aparece imediatamente no quadro de Pendências.
 
-### 4.3. Integração com ERP LocApp
+### 4.3. Integração com ERP Legado
 Centralizada em `src/lib/locapp`. Utiliza dados mockados (`clientes_postman.json`) se a API externa não estiver configurada.
 
 ---

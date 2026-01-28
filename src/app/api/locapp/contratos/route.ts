@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { listarContratosPorCnpj } from '../../../../lib/locapp/client'
-import { Contrato } from '../../../../lib/locapp/types'
+import { listarContratosPorCnpj } from '../../../../backend/locapp/client'
+import { Contrato } from '../../../../backend/locapp/types'
 
 function validate(req: Request) {
   const expected = process.env.API_SECRET_KEY
@@ -19,7 +19,7 @@ export async function GET(req: Request) {
     console.log(`[API] Buscando contratos para CNPJ: ${cpfcnpj}`)
     try {
       const raw = await listarContratosPorCnpj(cpfcnpj)
-      console.log(`[API] Resposta bruta LocApp:`, raw)
+      console.log(`[API] Resposta bruta Legado:`, raw)
 
       let list: Contrato[] = []
       

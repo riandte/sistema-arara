@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { pesquisarPessoas } from '@/lib/locapp/client'
+import { pesquisarPessoas } from '@/backend/locapp/client'
 
 export async function GET(req: Request) {
   const url = new URL(req.url)

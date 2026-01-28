@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { Funcionario, Setor, Cargo, User } from '@/lib/types';
+import { Funcionario, Setor, Cargo, User } from '@/shared/types';
 import { Plus, Pencil, Trash2, UserCheck, Search } from 'lucide-react';
-import Modal from '@/components/ui/Modal';
-import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import Modal from '@/frontend/components/ui/Modal';
+import ConfirmDialog from '@/frontend/components/ui/ConfirmDialog';
 
 export default function FuncionariosPage() {
   const [items, setItems] = useState<Funcionario[]>([]);

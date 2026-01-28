@@ -1,7 +1,7 @@
 # Definição Estrutural: Entidade Pendência
 
 ## 1. Descrição Conceitual
-A **Pendência** é a entidade nuclear do sistema LocApp Next. Ela representa uma **Unidade de Trabalho Atômica** que deve ser realizada, acompanhada e concluída. Diferente da Ordem de Serviço (que é um documento contratual/formal), a Pendência é operacional e dinâmica.
+A **Pendência** é a entidade nuclear do sistema ARARA. Ela representa uma **Unidade de Trabalho Atômica** que deve ser realizada, acompanhada e concluída. Diferente da Ordem de Serviço (que é um documento contratual/formal), a Pendência é operacional e dinâmica.
 
 Ela serve como contêiner genérico para qualquer tarefa no sistema, abstraindo a origem da demanda (seja ela uma OS, uma solicitação interna ou uma tarefa financeira).
 

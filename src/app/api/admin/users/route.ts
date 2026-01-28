@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { UserService } from '@/lib/services/userService';
-import { FuncionarioService } from '@/lib/services/funcionarioService';
-import { AuthContext } from '@/lib/auth/authContext';
+import { UserService } from '@/backend/services/userService';
+import { FuncionarioService } from '@/backend/services/funcionarioService';
+import { AuthContext } from '@/backend/auth/authContext';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 

@@ -1,6 +1,6 @@
-# Guia de Implementação Frontend: Interface Kanban
+# Guia de Implementação Frontend - ARARA
 
-Este documento define a implementação da interface visual do Kanban para o módulo de Pendências do LocApp Next. A UI deve ser uma **camada burra** que reflete o estado do servidor e propõe mudanças, sem conter regras de negócio.
+Este documento define a implementação da interface visual do Kanban para o módulo de Pendências do ARARA. A UI deve ser uma **camada burra** que reflete o estado do servidor e propõe mudanças, sem conter regras de negócio.
 
 ## 1. Visão Geral da UI do Kanban
 

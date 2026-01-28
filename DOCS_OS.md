@@ -1,6 +1,6 @@
 # Documentação do Módulo de Ordens de Serviço (OS)
 
-Este documento detalha a implementação técnica e funcional do módulo de Ordens de Serviço (OS) do sistema Solução Rental.
+Este documento detalha a implementação técnica e funcional do módulo de Ordens de Serviço (OS) do sistema ARARA.
 
 ## 1. Visão Geral
 
@@ -55,7 +55,7 @@ Esta é a funcionalidade central implementada. O formulário é dividido em seç
 *Arquivo: `src/app/api/service-orders/route.ts`*
 
 A rota API atua como um *proxy* ou controlador:
-- **Modo Real**: Se as variáveis de ambiente (`LOCAPP_BASE_URL`, etc.) estiverem configuradas, ela repassa a requisição para a API externa do ERP LocApp.
+- **Modo Real**: Se as variáveis de ambiente (`LOCAPP_BASE_URL`, etc.) estiverem configuradas, ela repassa a requisição para a API externa do ERP Legado.
 - **Modo Mock (Desenvolvimento)**: Se não houver configuração externa, ela armazena os dados em memória (array temporário) para permitir testes de interface sem backend real.
 
 ## 4. Componentes Reutilizáveis
