@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "start:prod": "next start",
     "postinstall": "prisma generate",
@@ -38,6 +38,7 @@
     "@types/react": "19.2.7",
     "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "^1.0.0",
+    "dotenv": "^17.2.3",
     "postcss": "^8.5.6",
     "prisma": "^7.3.0",
     "tailwindcss": "^4.1.18",
