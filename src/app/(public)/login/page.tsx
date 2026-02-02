@@ -23,16 +23,27 @@ export default function LoginPage() {
         body: JSON.stringify({ username, password }),
       })
 
-      const data = await res.json()
+      let data;
+      try {
+        data = await res.json()
+      } catch (jsonError) {
+        // Se não for JSON, provavelmente é um erro 500 do servidor web ou timeout
+        throw new Error('Erro de comunicação com o servidor. Tente novamente mais tarde.')
+      }
 
-      if (data.success) {
+      if (res.ok && data.success) {
         router.push('/os') // Redirect to dashboard or home
         router.refresh() // Refresh to update middleware state
       } else {
         setError(data.message || 'Credenciais inválidas')
+        // Limpar senha em caso de erro para forçar redigitação (segurança/UX)
+        if (res.status === 401) {
+            setPassword('')
+        }
       }
-    } catch (err) {
-      setError('Ocorreu um erro ao tentar entrar. Tente novamente.')
+    } catch (err: any) {
+      console.error('Login error:', err)
+      setError(err.message || 'Ocorreu um erro ao tentar entrar. Verifique sua conexão.')
     } finally {
       setLoading(false)
     }
